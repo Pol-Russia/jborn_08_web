@@ -1,12 +1,14 @@
 create table person(
                         id serial primary key not null,
                         full_name varchar(60) not null,
-                        e_mail varchar(120),
+                        nick_name varchar(25),
+                        e_mail varchar(60),
                         password varchar(15)
 );
 
 create table account (
                        id serial primary key not null,
+                       number_account integer,
                        person_id int not null references person(id),
                        balance money not null,
                        currency_id int not null references currency(id),
@@ -31,19 +33,11 @@ create table currency (
                        name_of_currency varchar(20) not null
 );
 
-create table account_description (
-                      id serial primary key not null,
-                      description varchar(50) not null
-);
+
 
                       create index name_index
                       on person (full_name);
 
-                      create index sum
-                      on transaction (sum);
+                      create index account_index
+                      on transaction (account_id);
 
-alter table account
-                       add person_id int not null references person(id),
-                       add currency_id int not null references currency(id),
-                       add description_id int not null references account_description(id),
-                       drop  user_list_id;
