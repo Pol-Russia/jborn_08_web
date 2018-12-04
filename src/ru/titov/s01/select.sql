@@ -1,7 +1,7 @@
 4.a
 select p.full_name as name, account.id, account.balance  from person as p, account
-where p.id = account.person_id
-order by p.full_name;
+where (p.id = account.person_id)
+
 
 select p.full_name as name, account.id, account.balance  from person as p inner join account
 on p.id = account.person_id
