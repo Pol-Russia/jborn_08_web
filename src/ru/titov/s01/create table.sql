@@ -1,9 +1,9 @@
 create table person(
                         id serial primary key not null,
-                        full_name varchar(60) not null,
+                        e_mail varchar(60) not null,
+                        password varchar(15) not null,
                         nick_name varchar(25),
-                        e_mail varchar(60),
-                        password varchar(15)
+                        full_name varchar(60)
 );
 
 create table account (
@@ -35,8 +35,8 @@ create table currency (
 
 
 
-                      create index name_index
-                      on person (full_name);
+                      create index name_mail
+                      on person (e_mail);
 
                       create index account_index
                       on transaction (account_id);
