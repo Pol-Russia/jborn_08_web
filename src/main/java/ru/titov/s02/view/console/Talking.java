@@ -74,10 +74,11 @@ public class Talking {
                         //CategorieDto categorieDto = new CategorieDto();
                         //Categorie categorie = categorieDto.createCategorie();
                         СurrencyDto currencyDto = new  СurrencyDto();
+                        Currency currency = currencyDto.createCurrency();
 
 
                         if (currencyDto != null) {
-                            System.out.println("Категория " + currencyDto + " успешно создана.");
+                            System.out.println("Категория " + currency.getNameOfCurrency() + " успешно создана.");
                         }
                         else {
                             System.out.println("your categorie not created!");

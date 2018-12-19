@@ -57,12 +57,12 @@ public class СurrencyDto {
 
 
     public boolean validateCurrency(String nameCurrency) {
-        if (nameCurrency != null && nameCurrency.length() > 15 || nameCurrency.length() < 1) {
+        if (nameCurrency != null && nameCurrency.length() > 15 || nameCurrency.length()  < 1) {
             System.out.println("name of currency must contain from 1 to 15 letters!");
             return false;
         }
 
-        Pattern p = Pattern.compile("$?[a-zA-Zа-яА-Я]*");
+        Pattern p = Pattern.compile("[$]?[a-zA-Zа-яА-Я]*");
         Matcher m = p.matcher(nameCurrency);
         return m.matches();
     }
