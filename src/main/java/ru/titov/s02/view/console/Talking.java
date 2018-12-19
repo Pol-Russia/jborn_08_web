@@ -1,6 +1,7 @@
 package ru.titov.s02.view.console;
 
 import ru.titov.s02.dao.domain.Categorie;
+import ru.titov.s02.dao.domain.Currency;
 import ru.titov.s02.dao.domain.Person;
 import ru.titov.s02.service.NewPerson;
 
@@ -70,10 +71,16 @@ public class Talking {
                     }
                     if (str.equalsIgnoreCase("2")) {
 
-                        CategorieDto categorieDto = new CategorieDto();
-                        String stringCategorie = categorieDto.createCategorie().getDescription();
-                        if (stringCategorie != null) {
-                            System.out.println("Категория " + stringCategorie + " успешно создана.");
+                        //CategorieDto categorieDto = new CategorieDto();
+                        //Categorie categorie = categorieDto.createCategorie();
+                        СurrencyDto currencyDto = new  СurrencyDto();
+
+
+                        if (currencyDto != null) {
+                            System.out.println("Категория " + currencyDto + " успешно создана.");
+                        }
+                        else {
+                            System.out.println("your categorie not created!");
                         }
 
                     }

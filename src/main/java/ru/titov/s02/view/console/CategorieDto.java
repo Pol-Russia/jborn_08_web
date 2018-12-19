@@ -1,9 +1,11 @@
 package ru.titov.s02.view.console;
 
 import ru.titov.s02.dao.domain.Categorie;
+import ru.titov.s02.dao.domain.CategorieDao;
 import ru.titov.s02.service.CheckCategorie;
 import ru.titov.s02.service.NewCategorie;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class CategorieDto {
@@ -60,4 +62,21 @@ public class CategorieDto {
         }
         return true;
     }
+
+    public List<Categorie> getDescriptions() {
+        CategorieDao categorieDao = new CategorieDao();
+        return categorieDao.findByAll();
+    }
+
+    public String selectDescription(int choose) {
+        List<Categorie> list = getDescriptions();
+
+        if (list != null && list.size() >= choose && choose > 0) {
+            return list.get(choose - 1).getDescription();
+        }
+        System.out.println("Number categorie description is out...");
+        return null;
+    }
+
+
 }

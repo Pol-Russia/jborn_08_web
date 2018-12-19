@@ -41,8 +41,10 @@ public class CategorieDao implements Dao<Categorie, Integer> {
             ResultSet rs = statement.executeQuery("Select * From categorie ");
 
             while (rs.next()) {
+
                 Categorie categorie = new Categorie();
                 list.add(getCategorie(rs, categorie));
+
             }
         }
         catch (SQLException exept) {
