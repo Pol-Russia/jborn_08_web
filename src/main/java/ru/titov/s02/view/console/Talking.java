@@ -1,5 +1,6 @@
 package ru.titov.s02.view.console;
 
+import ru.titov.s02.dao.domain.Categorie;
 import ru.titov.s02.dao.domain.Person;
 import ru.titov.s02.service.NewPerson;
 
@@ -70,8 +71,9 @@ public class Talking {
                     if (str.equalsIgnoreCase("2")) {
 
                         CategorieDto categorieDto = new CategorieDto();
-                        if (categorieDto.createCategorie() != null) {
-                            System.out.println("Категория " + categorieDto.getDescription() + " успешно создана.");
+                        String stringCategorie = categorieDto.createCategorie().getDescription();
+                        if (stringCategorie != null) {
+                            System.out.println("Категория " + stringCategorie + " успешно создана.");
                         }
 
                     }

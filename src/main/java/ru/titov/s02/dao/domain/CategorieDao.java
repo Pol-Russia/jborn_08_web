@@ -72,10 +72,12 @@ public class CategorieDao implements Dao<Categorie, Integer> {
                 try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                     if (resultSet.next()) {
                         categorie.setId(resultSet.getInt("id"));
+
+                        return categorie;
                     }
 
                 }
-                return categorie;
+
             }
 
         } catch (SQLException e) {

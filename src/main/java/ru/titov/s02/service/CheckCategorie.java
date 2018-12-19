@@ -17,16 +17,13 @@ public class CheckCategorie {
         List<Categorie> list = downloadListCategorie();
         int size = list.size();
 
-        if (size > 0) {
+
             for (int i = 0; i < size; i++) {
                 if (description.equalsIgnoreCase(list.get(i).getDescription())) {
-                    return true;
-                }
+                    return false;
+
             }
         }
-        else {
-            return true;
-        }
-        return false;
+        return true;
     }
 }

@@ -19,7 +19,7 @@ public class CategorieDto {
     public Categorie createCategorie() {
 
         System.out.println("Please print your descripton and press <Enter>");
-        Scanner scanner = new Scanner("System.in");
+        Scanner scanner = new Scanner(System.in);
         String description = scanner.nextLine().trim();
 
             if (validateDescription(description)) {
