@@ -28,23 +28,6 @@ public class DaoFactory {
             return getDataSource().getConnection();
     }
 
-    public static int checkOrderId(String tableName) {
-
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-
-            ResultSet rs = statement.executeQuery("Select max(id) From " +
-                    tableName);
-
-            if (rs.next()) {
-                return rs.getInt(1) + 1;
-            }
-        }
-        catch (SQLException exept) {
-            throw new RuntimeException(exept);
-        }
-        return 1;
-    }
 
     private DaoFactory() {
     }

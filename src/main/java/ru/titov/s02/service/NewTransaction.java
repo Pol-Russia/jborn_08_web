@@ -5,7 +5,7 @@ import ru.titov.s02.dao.domain.TransactionDao;
 
 import java.util.Date;
 
-import static ru.titov.s02.dao.DaoFactory.checkOrderId;
+
 
 public class NewTransaction {
     private Transaction createNewTransaction(int accountId, long sum, Date date, int categorieId) {
@@ -23,9 +23,8 @@ public class NewTransaction {
         transaction.setDate(date);
         transaction.setCategorieID(categorieId);
 
-        String tableName = "transaction";
-        int id = checkOrderId(tableName);
 
-        transaction.setId(id);
+
+
     }
 }

@@ -106,16 +106,22 @@ public class PersonDao implements Dao<Person, Integer> {
     @Override
     public Person insert(Person person) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO person(id," +
-                     "e_mail, password, nick_name, full_name) VALUES(?, ?, ?, ?, ?)");)
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO person(" +
+                     "e_mail, password, nick_name, full_name) VALUES(?, ?, ?, ?)",
+                     Statement.RETURN_GENERATED_KEYS);)
         {
-            preparedStatement.setInt(   1,   person.getId());
-            preparedStatement.setString(2, person.getMail());
-            preparedStatement.setString(3, person.getPassword());
-            preparedStatement.setString(4, person.getNick());
-            preparedStatement.setString(5, person.getFullName());
 
-            if (preparedStatement.execute()) {
+            preparedStatement.setString(1, person.getMail());
+            preparedStatement.setString(2, person.getPassword());
+            preparedStatement.setString(3, person.getNick());
+            preparedStatement.setString(4, person.getFullName());
+
+            if (preparedStatement.executeUpdate() > 0) {
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        person.setId(resultSet.getInt("id"));
+                    }
+                }
                 return person;
             }
 
@@ -138,7 +144,7 @@ public class PersonDao implements Dao<Person, Integer> {
             preparedStatement.setString(3, person.getNick());
             preparedStatement.setString(4, person.getFullName());
 
-            if (preparedStatement.execute()) {
+            if (preparedStatement.executeUpdate() > 0) {
                 return person;
             }
 

@@ -4,7 +4,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import ru.titov.s02.dao.domain.Person;
 import ru.titov.s02.dao.domain.PersonDao;
 
-import static ru.titov.s02.dao.DaoFactory.checkOrderId;
 
 public class NewPerson {
 
@@ -29,10 +28,5 @@ public class NewPerson {
         person.setPassword(password);
         person.setNick(nick);
         person.setFullName(fullName);
-
-        String tableName = "person";
-        int id = checkOrderId(tableName);
-
-        person.setId(id);
     }
 }

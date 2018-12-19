@@ -62,13 +62,19 @@ public class CategorieDao implements Dao<Categorie, Integer> {
     @Override
     public Categorie insert(Categorie categorie) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO categorie(id," +
-                     "description) VALUES(?, ? )");)
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO categorie(" +
+                     "description) VALUES( ? )", Statement.RETURN_GENERATED_KEYS);)
         {
-            preparedStatement.setInt(   1, categorie.getId());
-            preparedStatement.setString(2, categorie.getDescription());
 
-            if (preparedStatement.execute()) {
+            preparedStatement.setString(1, categorie.getDescription());
+
+            if (preparedStatement.executeUpdate() > 0) {
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        categorie.setId(resultSet.getInt("id"));
+                    }
+
+                }
                 return categorie;
             }
 
@@ -90,7 +96,8 @@ public class CategorieDao implements Dao<Categorie, Integer> {
             preparedStatement.setInt(2, categorie.getId());
             preparedStatement.setString(1, categorie.getDescription());
 
-            if (preparedStatement.execute()) {
+            if (preparedStatement.executeUpdate() > 0) {
+
                 return categorie;
             }
 

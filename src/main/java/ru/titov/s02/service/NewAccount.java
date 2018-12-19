@@ -3,7 +3,7 @@ package ru.titov.s02.service;
 import ru.titov.s02.dao.domain.Account;
 import ru.titov.s02.dao.domain.AccountDao;
 
-import static ru.titov.s02.dao.DaoFactory.checkOrderId;
+
 
 public class NewAccount {
 
@@ -27,10 +27,5 @@ public class NewAccount {
         account.setBalance(0);
         account.setCurrencyID(currencyId);
         account.setDescription(description);
-
-        String tableName = "account";
-        int id = checkOrderId(tableName); //Получить актуальный id
-
-        account.setId(id);
     }
 }

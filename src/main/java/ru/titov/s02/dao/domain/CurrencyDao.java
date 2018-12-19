@@ -62,13 +62,19 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     @Override
     public Currency insert(Currency currency) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO currency(id," +
-                     "name_of_currency) VALUES(?, ? )");)
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO currency(" +
+                     "name_of_currency) VALUES(? )", Statement.RETURN_GENERATED_KEYS);)
         {
-            preparedStatement.setInt(   1, currency.getId());
-            preparedStatement.setString(2, currency.getNameOfCurrency());
 
-            if (preparedStatement.execute()) {
+            preparedStatement.setString(1, currency.getNameOfCurrency());
+
+            if (preparedStatement.executeUpdate() > 0) {
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        currency.setId(resultSet.getInt("id"));
+                    }
+
+                }
                 return currency;
             }
 
@@ -89,7 +95,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
             preparedStatement.setInt(2, currency.getId());
             preparedStatement.setString(1, currency.getNameOfCurrency());
 
-            if (preparedStatement.execute()) {
+            if (preparedStatement.executeUpdate() > 0) {
                 return currency;
             }
 

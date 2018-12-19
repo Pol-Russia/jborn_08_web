@@ -67,15 +67,21 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     public Transaction insert(Transaction transaction) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transaction(id," +
-                     "account_id, sum, date, categorie_id) VALUES(?, ?, ?, ?, ?)");)
+                     "account_id, sum, date, categorie_id) VALUES( ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);)
         {
-            preparedStatement.setInt(   1, transaction.getId());
-            preparedStatement.setInt(2, transaction.getAccountID());
-            preparedStatement.setLong(3, transaction.getSum());
-            preparedStatement.setDate(4, (Date) transaction.getDate());
-            preparedStatement.setInt(5, transaction.getCategorieID());
+
+            preparedStatement.setInt(1, transaction.getAccountID());
+            preparedStatement.setLong(2, transaction.getSum());
+            preparedStatement.setDate(3, (Date) transaction.getDate());
+            preparedStatement.setInt(4, transaction.getCategorieID());
 
             if (preparedStatement.execute()) {
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        transaction.setId(resultSet.getInt("id"));
+                    }
+
+                }
                 return transaction;
             }
 
@@ -98,7 +104,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
             preparedStatement.setDate(3, (Date) transaction.getDate());
             preparedStatement.setInt(4, transaction.getCategorieID());
 
-            if (preparedStatement.execute()) {
+            if (preparedStatement.executeUpdate() > 0) {
                 return transaction;
             }
 

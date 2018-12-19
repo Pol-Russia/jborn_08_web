@@ -1,19 +1,20 @@
 package ru.titov.s02.view.console;
 
 import ru.titov.s02.dao.domain.Person;
-import ru.titov.s02.dao.domain.PersonDao;
 import ru.titov.s02.service.CheckPerson;
+import ru.titov.s02.service.NewPerson;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class User {
+public class UserDto {
     private String mail;
     private String password;
     private String nick;
     private String fullName;
     Scanner scanner = new Scanner(System.in);
+
 
 
     private void setMail(String mail) {
@@ -47,6 +48,29 @@ public class User {
     }
 
 
+    public UserDto newUser() {
+
+     UserDto user = new UserDto();
+
+        if (user.createUser()) {
+            NewPerson newPerson = new NewPerson();
+            Person person =  newPerson.createNewPerson(user.getMail(), user.getPassword(), user.getNick(), user.getFullName());
+
+            if (person != null) {
+                System.out.println("New userDto " + user.getMail() + " successfully created!");
+                return user;
+            }
+            else {
+                System.out.println("Возможно данный e-mail " + user.getMail() + " уже зарегистрирован!" +
+                        "\n Повторная регистрация запрещена!");
+                return null;
+            }
+        }
+        else {
+            System.out.println("Что то пошло не так!");
+            return null;
+        }
+    }
 
 
 
@@ -167,12 +191,12 @@ public class User {
     }
 
     Person isExistUser() {
-        User user = getMailTalking();
+        UserDto userDto = getMailTalking();
 
-        if (user != null) {
+        if (userDto != null) {
             Person person = new Person();
-            person.setMail(user.getMail());
-            person.setPassword(user.getPassword());
+            person.setMail(userDto.getMail());
+            person.setPassword(userDto.getPassword());
 
             if (new CheckPerson().checkPassword(person.getPassword(), person.getMail())) {
                 System.out.println("Successfully!");
@@ -182,7 +206,7 @@ public class User {
         return null;
     }
 
-    private User getMailTalking() {
+    private UserDto getMailTalking() {
         System.out.println("Please print your e-mail and press <Enter>");
         String mail = scanner.nextLine().trim();
 
@@ -191,10 +215,10 @@ public class User {
             String password = scanner.nextLine().trim();
 
             if (validatePassword(password)) {
-                User user = new User();
-                user.setMail(mail);
-                user.setPassword(password);
-                return user;
+                UserDto userDto = new UserDto();
+                userDto.setMail(mail);
+                userDto.setPassword(password);
+                return userDto;
             }
             else {
                 System.out.println("Your password is not validate!");

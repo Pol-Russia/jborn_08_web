@@ -64,17 +64,28 @@ public class AccountDao implements Dao<Account, Integer> {
     @Override
     public Account insert(Account account) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO account(id," +
-                     "number_account, person_id, balance, currency_id, description) VALUES(?, ?, ?, ?, ?, ?)");)
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO account(" +
+                     "number_account, person_id, balance, currency_id, description) VALUES( ?, ?, ?, ?, ?)",
+                     Statement.RETURN_GENERATED_KEYS);)
         {
-            preparedStatement.setInt(   1, account.getId());
-            preparedStatement.setInt(2, account.getNumberAccount());
-            preparedStatement.setInt(3, account.getPersonID());
-            preparedStatement.setLong(4, account.getBalance());
-            preparedStatement.setInt(5, account.getCurrencyID());
-            preparedStatement.setString(6, account.getDescription());
+            preparedStatement.setInt(1, account.getNumberAccount());
+            preparedStatement.setInt(2, account.getPersonID());
+            preparedStatement.setLong(3, account.getBalance());
+            preparedStatement.setInt(4, account.getCurrencyID());
+            preparedStatement.setString(5, account.getDescription());
 
-            if (preparedStatement.execute()) {
+
+            if (preparedStatement.executeUpdate() > 0) {
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                         account.setId(resultSet.getInt("id"));
+                    }
+
+                }
+                catch (SQLException sql) {
+                    throw new RuntimeException(sql);
+                }
+
                 return account;
             }
 
@@ -98,7 +109,7 @@ public class AccountDao implements Dao<Account, Integer> {
             preparedStatement.setInt(4, account.getCurrencyID());
             preparedStatement.setString(5, account.getDescription());
 
-            if (preparedStatement.execute()) {
+            if (preparedStatement.executeUpdate() > 0) {
                 return account;
             }
 
