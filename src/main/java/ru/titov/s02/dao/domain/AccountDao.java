@@ -123,9 +123,13 @@ public class AccountDao implements Dao<Account, Integer> {
     public boolean delete(Integer id) {
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM account WHERE (account.id = ?")) {
 
-            if (statement.executeUpdate("DELETE * FROM account WHERE (account.id = " + id + ")") != 0) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
                 return true;
             }
         }
@@ -137,24 +141,25 @@ public class AccountDao implements Dao<Account, Integer> {
     }
 
 
-    public Account findByNumberAccount(Integer numberAccount) {
+    public List<Account> findByNumberAccount(Integer numberAccount) {
         Account account = new Account();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From account " +
+                     "WHERE (account.number_account = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From account " +
-                    "WHERE (account.number_account = " + numberAccount + ")");
+            preparedStatement.setInt(1, numberAccount);
+            ResultSet rs = preparedStatement.executeQuery();
+            List<Account> list = new ArrayList();
 
-            if (rs.next()) {
-                return getAccount(rs, account);
+            while (rs.next()) {
+                list.add(getAccount(rs, account));
             }
+            return list;
         }
         catch (SQLException exept) {
             throw new RuntimeException(exept);
         }
-
-        return  null;
     }
 
     public List<Account> findByPersonId(Integer personId) {

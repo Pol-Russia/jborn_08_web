@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class СurrencyDto {
+public class CurrencyDto {
     String nameCurrency;
 
 

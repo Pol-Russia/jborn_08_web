@@ -1,6 +1,6 @@
 package ru.titov.s02.view.console;
 
-import ru.titov.s02.dao.domain.Categorie;
+import ru.titov.s02.dao.domain.Account;
 import ru.titov.s02.dao.domain.Currency;
 import ru.titov.s02.dao.domain.Person;
 import ru.titov.s02.service.NewPerson;
@@ -12,6 +12,7 @@ public class Talking {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Person user = null;
 
         while (true) {
 
@@ -30,9 +31,9 @@ public class Talking {
             }
             if (str.equals("1")) {
 
-                UserDto userDto = new UserDto().newUser();
+                user = new UserDto().newUser();
 
-                if (userDto != null) {
+                if (user != null) {
 
                     System.out.println("Please press \"1\", if you wish create new account");
                     System.out.println("Please press \"2\" if you wish сreate new description your account");
@@ -45,8 +46,7 @@ public class Talking {
                     }
                     if (str.equalsIgnoreCase("2")) {
 
-                        CategorieDto categorieDto = new CategorieDto();
-                        categorieDto.createCategorie();
+
 
                     }
                 }
@@ -56,6 +56,7 @@ public class Talking {
             }
             if (str.equalsIgnoreCase("2")) {
                 Person person = new UserDto().isExistUser();
+                Person p = new NewPerson().createNewPerson("igor@igor.ru", "igorigor", "IG", "Игорев Игорь Степанович" );
                 if (person != null) {
 
                     System.out.println("Please press \"1\", if you wish create new account");
@@ -73,12 +74,14 @@ public class Talking {
 
                         //CategorieDto categorieDto = new CategorieDto();
                         //Categorie categorie = categorieDto.createCategorie();
-                        СurrencyDto currencyDto = new  СurrencyDto();
-                        Currency currency = currencyDto.createCurrency();
+                        //CurrencyDto currencyDto = new CurrencyDto();
+                        //Currency currency = currencyDto.createCurrency();
+                        AccountDto accountDto = new AccountDto(p);
+                        Account account = accountDto.createAccount();
 
 
-                        if (currencyDto != null) {
-                            System.out.println("Категория " + currency.getNameOfCurrency() + " успешно создана.");
+                        if (account != null) {
+                            System.out.println(account.getId()+": " + account.getNumberAccount()+": " + account.getPersonID()+": " +account.getDescription());
                         }
                         else {
                             System.out.println("your categorie not created!");

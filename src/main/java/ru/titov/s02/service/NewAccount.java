@@ -7,7 +7,7 @@ import ru.titov.s02.dao.domain.AccountDao;
 
 public class NewAccount {
 
-    private Account createNewAccount(int numberAccount, int personId, int currencyId, String description) {
+    public Account createNewAccount(int numberAccount, int personId, int currencyId, String description) {
 
         AccountDao accountDao = new AccountDao();
         Account account = new Account();

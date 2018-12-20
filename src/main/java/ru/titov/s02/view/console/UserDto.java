@@ -48,7 +48,7 @@ public class UserDto {
     }
 
 
-    public UserDto newUser() {
+    public Person newUser() {
 
      UserDto user = new UserDto();
 
@@ -58,7 +58,7 @@ public class UserDto {
 
             if (person != null) {
                 System.out.println("New userDto " + user.getMail() + " successfully created!");
-                return user;
+                return person;
             }
             else {
                 System.out.println("Возможно данный e-mail " + user.getMail() + " уже зарегистрирован!" +

@@ -1,5 +1,6 @@
 package ru.titov.s02.dao.domain;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import ru.titov.s02.dao.Dao;
 
 import java.sql.*;
@@ -19,16 +20,39 @@ public class PersonDao implements Dao<Person, Integer> {
 
         return person;
     }
+    private String toMD5(String start) {
+        return DigestUtils.md5Hex(start);
+    }
+
+    private void setPreparedStatement(PreparedStatement ps, Person person) throws SQLException {
+        ps.setString(1, person.getMail());
+        ps.setString(2, person.getPassword());
+        ps.setString(3, person.getNick());
+        ps.setString(4, person.getFullName());
+    }
+
+    private Person checkPreparedStatement(PreparedStatement ps, Person person) throws SQLException {
+        if (ps.executeUpdate() > 0) {
+            try (ResultSet resultSet = ps.getGeneratedKeys()) {
+                if (resultSet.next()) {
+                    person.setId(resultSet.getInt("id"));
+                }
+            }
+            return person;
+        }
+        return null;
+    }
 
     @Override
     public Person findById(Integer id) {
         Person person = new Person();
 
         try (Connection connection = getConnection();
-            Statement statement = connection.createStatement()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("Select * From person "  +
+                    "WHERE (person.id =  ?)")) {
 
-             ResultSet rs = statement.executeQuery("Select * From person " +
-                    "WHERE (person.id = " +id + ")");
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
 
              if (rs.next()) {
                  return getPerson(rs, person);
@@ -84,13 +108,15 @@ public class PersonDao implements Dao<Person, Integer> {
         return null;
     }
 
-    public Person findByNick(String nick) {
+    public Person findByNickAndPassword(String nick, String password) {
         Person person = new Person();
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From person " +
-                     "WHERE (person.nick_name = ?")) {
+                     "WHERE (person.nick_name = ? and person.password = ?)")) {
 
+            preparedStatement.setString(1, nick);
+            preparedStatement.setString(2, toMD5(password));
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
@@ -111,19 +137,9 @@ public class PersonDao implements Dao<Person, Integer> {
                      Statement.RETURN_GENERATED_KEYS);)
         {
 
-            preparedStatement.setString(1, person.getMail());
-            preparedStatement.setString(2, person.getPassword());
-            preparedStatement.setString(3, person.getNick());
-            preparedStatement.setString(4, person.getFullName());
+           setPreparedStatement(preparedStatement, person);
+           checkPreparedStatement(preparedStatement, person);
 
-            if (preparedStatement.executeUpdate() > 0) {
-                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                    if (resultSet.next()) {
-                        person.setId(resultSet.getInt("id"));
-                    }
-                }
-                return person;
-            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -139,10 +155,7 @@ public class PersonDao implements Dao<Person, Integer> {
                 "WHERE id = ?");)
         {
             preparedStatement.setInt(   5,   person.getId());
-            preparedStatement.setString(1, person.getMail());
-            preparedStatement.setString(2, person.getPassword());
-            preparedStatement.setString(3, person.getNick());
-            preparedStatement.setString(4, person.getFullName());
+            setPreparedStatement(preparedStatement, person);
 
             if (preparedStatement.executeUpdate() > 0) {
                 return person;
@@ -158,9 +171,12 @@ public class PersonDao implements Dao<Person, Integer> {
     public boolean delete(Integer id) {
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM person WHERE (person.id = ?)"))
+             {
+                 preparedStatement.setInt(1, id);
+                 ResultSet rs = preparedStatement.executeQuery();
 
-            if (statement.executeUpdate("DELETE * FROM person WHERE (person.id = " + id + ")") != 0) {
+            if (rs.next()) {
                 return true;
             }
         }

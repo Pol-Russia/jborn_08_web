@@ -1,11 +1,23 @@
 package ru.titov.s02.dao.domain;
 
+import java.util.List;
+
 public class Person {
     private int id;
     private String mail;
     private String password;
     private String nick;
     private String fullName;
+    private List<Account> listAccount; //Список счетов!
+
+    public List<Account> getListAccount(int numberAccount) {//Метод, возвращающий список счетов
+        //данного клиента
+        AccountDao accountDao = new AccountDao();
+        return accountDao.findByNumberAccount(numberAccount);
+    }
+
+
+
 
     public int getId() {
         return id;

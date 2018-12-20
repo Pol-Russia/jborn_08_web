@@ -3,10 +3,7 @@ package ru.titov.s02.dao;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DaoFactory {
     private static DataSource dataSource;
@@ -27,6 +24,11 @@ public class DaoFactory {
     public static Connection getConnection() throws SQLException {
             return getDataSource().getConnection();
     }
+
+
+
+
+
 
 
     private DaoFactory() {
