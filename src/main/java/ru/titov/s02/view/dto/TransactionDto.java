@@ -1,11 +1,11 @@
-package ru.titov.s02.dao.domain;
+package ru.titov.s02.view.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Transaction {
-    private int id;
-    private int accountID;
+public class TransactionDto {
+    private int id = -11;
+    private  int accountID;
     private BigDecimal sum;
     private Date date;
     private int categorieID;

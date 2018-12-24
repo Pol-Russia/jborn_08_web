@@ -1,113 +1,75 @@
 package ru.titov.s02.view.console;
 
 import ru.titov.s02.dao.domain.Person;
-import ru.titov.s02.service.CheckPerson;
-import ru.titov.s02.service.NewPerson;
+import ru.titov.s02.service.PersonService;
+import ru.titov.s02.service.converters.UserConverter;
+import ru.titov.s02.view.dto.AccountDto;
+import ru.titov.s02.view.dto.UserDto;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserDto {
-    private String mail;
-    private String password;
-    private String nick;
-    private String fullName;
+public class UserView {
+
     Scanner scanner = new Scanner(System.in);
 
 
+    public Person createNewPerson(UserDto userDto) {
 
-    private void setMail(String mail) {
-        this.mail = mail;
-    }
+        if (userDto != null) {
 
-    private void setPassword(String password) {
-        this.password = password;
-    }
+            Person person = new UserConverter().userDtoToPersonConvert(userDto);
 
-    private void setNick(String nick) {
-        this.nick = nick;
-    }
-
-
-
-    public String getMail() {
-        return mail;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getNick() {
-        return nick;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-
-    public Person newUser() {
-
-     UserDto user = new UserDto();
-
-        if (user.createUser()) {
-            NewPerson newPerson = new NewPerson();
-            Person person =  newPerson.createNewPerson(user.getMail(), user.getPassword(), user.getNick(), user.getFullName());
-
-            if (person != null) {
-                System.out.println("New userDto " + user.getMail() + " successfully created!");
+            if (new PersonService().createNewPerson(person) != null) {
+                System.out.println("New userDto " + userDto.getMail() + " successfully created!");
                 return person;
-            }
-            else {
-                System.out.println("Возможно данный e-mail " + user.getMail() + " уже зарегистрирован!" +
+            } else {
+                System.out.println("Возможно данный e-mail " + userDto.getMail() + " уже зарегистрирован!" +
                         "\n Повторная регистрация запрещена!");
                 return null;
             }
         }
-        else {
-            System.out.println("Что то пошло не так!");
-            return null;
-        }
+        System.out.println("Что-то пошло не так! ");
+        return null;
     }
 
-
-
-    public boolean createUser() {
+    public UserDto createUserDto() {
         System.out.println("Please print your e-mail and press <Enter>");
         String mail = scanner.nextLine().trim();
+        UserDto userDto = new UserDto();
 
         while (true) {
             if (validateMail(mail)) {
                 System.out.println("Please print your password and press <Enter>");
-                this.mail = mail;
+                userDto.setMail(mail);
                 String password = scanner.nextLine().trim();
 
                 while (true) {
                     if (validatePassword(password)) {
                         System.out.println("Please print your Nick name and press <Enter>");
-                        this.password = password;
+                        userDto.setPassword(password);
                         String nick = scanner.nextLine().trim();
 
                         while (true) {
 
                             if (validateNickName(nick)) {
                                 System.out.println("Please print your full name and press <Enter>");
-                                this.nick = nick;
+                                userDto.setNick(nick);
                                 String fullName = scanner.nextLine().trim();
 
                                 while (true) {
                                     if (validateFullName(fullName)) {
-                                        this.fullName = fullName;
-                                        return true;
+                                        userDto.setFullName(fullName);
+                                        return userDto;
                                     }
                                     else {
                                         System.out.println("for exit press q or Q");
                                         fullName = scanner.nextLine().trim();
 
                                         if (fullName.equalsIgnoreCase("q")) {
-                                            return false;
+                                            return null;
                                         }
                                     }
                                 }
@@ -118,7 +80,7 @@ public class UserDto {
                                 nick = scanner.nextLine().trim();
 
                                 if (nick.equalsIgnoreCase("q")) {
-                                    return false;
+                                    return null;
                                 }
 
                             }
@@ -130,7 +92,7 @@ public class UserDto {
                         password = scanner.nextLine().trim();
 
                         if (password.equalsIgnoreCase("q")) {
-                            return false;
+                            return null;
                         }
                     }
                 }
@@ -141,12 +103,11 @@ public class UserDto {
                 mail = scanner.nextLine().trim();
 
                 if (mail.equalsIgnoreCase("q")) {
-                    return false;
+                    return null;
                 }
             }
         }
     }
-
 
     private boolean validateMail(String mail) {
 
@@ -194,11 +155,10 @@ public class UserDto {
         UserDto userDto = getMailTalking();
 
         if (userDto != null) {
-            Person person = new Person();
-            person.setMail(userDto.getMail());
-            person.setPassword(userDto.getPassword());
 
-            if (new CheckPerson().checkPassword(person.getPassword(), person.getMail())) {
+            Person person = new UserConverter().userDtoToPersonConvert(userDto);
+
+            if (new PersonService().checkPassword(person)) {
                 System.out.println("Successfully!");
                 return person;
             }
@@ -215,10 +175,10 @@ public class UserDto {
             String password = scanner.nextLine().trim();
 
             if (validatePassword(password)) {
-                UserDto userDto = new UserDto();
-                userDto.setMail(mail);
-                userDto.setPassword(password);
-                return userDto;
+                UserDto user = new UserDto();
+                user.setMail(mail);
+                user.setPassword(password);
+                return user;
             }
             else {
                 System.out.println("Your password is not validate!");
@@ -230,4 +190,6 @@ public class UserDto {
         }
         return null;
     }
+
+
 }

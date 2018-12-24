@@ -25,12 +25,6 @@ public class DaoFactory {
             return getDataSource().getConnection();
     }
 
-
-
-
-
-
-
     private DaoFactory() {
     }
 }

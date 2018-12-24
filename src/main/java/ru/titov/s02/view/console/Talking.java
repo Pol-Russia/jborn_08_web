@@ -1,18 +1,22 @@
 package ru.titov.s02.view.console;
 
 import ru.titov.s02.dao.domain.Account;
-import ru.titov.s02.dao.domain.Currency;
 import ru.titov.s02.dao.domain.Person;
-import ru.titov.s02.service.NewPerson;
+import ru.titov.s02.service.converters.UserConverter;
+import ru.titov.s02.view.dto.AccountDto;
+import ru.titov.s02.view.dto.UserDto;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Talking {
 
 
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Person user = null;
+        Person person = null;
+
 
         while (true) {
 
@@ -31,32 +35,13 @@ public class Talking {
             }
             if (str.equals("1")) {
 
-                user = new UserDto().newUser();
+                UserView userView = new UserView();
+                UserDto userDto = userView.createUserDto();
 
-                if (user != null) {
-
-                    System.out.println("Please press \"1\", if you wish create new account");
-                    System.out.println("Please press \"2\" if you wish сreate new description your account");
-                    System.out.println("Please press \"3\" for your account");
-                    System.out.println("for exit press \"q\" or \"Q\"");
-
-                    if (str.equalsIgnoreCase("q")) {
-                        System.out.println("good buy!");
-                        break;
-                    }
-                    if (str.equalsIgnoreCase("2")) {
-
-
-
-                    }
+                if (userDto != null) {
+                    person = userView.createNewPerson(userDto);
                 }
 
-
-
-            }
-            if (str.equalsIgnoreCase("2")) {
-                Person person = new UserDto().isExistUser();
-                Person p = new NewPerson().createNewPerson("igor@igor.ru", "igorigor", "IG", "Игорев Игорь Степанович" );
                 if (person != null) {
 
                     System.out.println("Please press \"1\", if you wish create new account");
@@ -64,39 +49,70 @@ public class Talking {
                     System.out.println("Please press \"3\" for your account");
                     System.out.println("for exit press \"q\" or \"Q\"");
 
-                    str = scanner.nextLine();
-
                     if (str.equalsIgnoreCase("q")) {
                         System.out.println("good buy!");
                         break;
                     }
                     if (str.equalsIgnoreCase("2")) {
 
-                        //CategorieDto categorieDto = new CategorieDto();
-                        //Categorie categorie = categorieDto.createCategorie();
-                        //CurrencyDto currencyDto = new CurrencyDto();
-                        //Currency currency = currencyDto.createCurrency();
-                        AccountDto accountDto = new AccountDto(p);
-                        Account account = accountDto.createAccount();
-
-
-                        if (account != null) {
-                            System.out.println(account.getId()+": " + account.getNumberAccount()+": " + account.getPersonID()+": " +account.getDescription());
-                        }
-                        else {
-                            System.out.println("your categorie not created!");
-                        }
 
                     }
+                    else if (str.equalsIgnoreCase("1")) {
+
+                        AccountView accountView = new AccountView();
+                        AccountDto accountDto = accountView.createAccountDto(userDto);
+
+                        if (accountDto != null) {
+                            Account account = accountView.createNewAccount(accountDto);
+                        }
 
 
-                } else {
-                    System.out.println("Неверный e-mail or password!");
+
+                    }
                 }
 
+
             }
+            if (str.equalsIgnoreCase("2")) {
+
+                Person p = new UserView().isExistUser();
+                if (person != null) {
+
+                    System.out.println("Проверка прошла успешно!");
+                }
+
+                System.out.println("Please press \"1\", if you wish create new account");
+                System.out.println("Please press \"2\" if you wish сreate new description your account");
+                System.out.println("Please press \"3\" for your account");
+                System.out.println("for exit press \"q\" or \"Q\"");
+
+                str = scanner.nextLine();
+
+                if (str.equalsIgnoreCase("q")) {
+                    System.out.println("good buy!");
+                    break;
+                }
+                if (str.equalsIgnoreCase("2")) {
+
+                    AccountView accountView = new AccountView();
+                    List<Account> ac = accountView.ShowAccount(new UserConverter().personToUserDtoConvert(p));
+                    for (Account a : ac) {
+                        System.out.println("PersonID: " + a.getPersonID());
+                        System.out.println("Description: " + a.getDescription());
+                    }
+
+                    //CategorieDto categorieDto = new CategorieDto();
+                    //Categorie categorie = categorieDto.createCategorie();
+                    //CurrencyDto currencyDto = new CurrencyDto();
+                    //Currency currency = currencyDto.createCurrency();
 
 
+                }
+            }
         }
     }
 }
+
+
+
+

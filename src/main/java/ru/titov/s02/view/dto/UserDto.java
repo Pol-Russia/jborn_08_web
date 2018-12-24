@@ -1,25 +1,12 @@
-package ru.titov.s02.dao.domain;
+package ru.titov.s02.view.dto;
 
-import ru.titov.s02.dao.AccountDao;
-
-import java.util.List;
-
-public class Person {
-    private int id;
+public class UserDto {
+    private int id = -11;
     private String mail;
     private String password;
     private String nick;
     private String fullName;
-    private List<Account> listAccount; //Список счетов!
 
-
-    public List<Account> getListAccount() {
-        return listAccount;
-    }
-
-    public void setListAccount(List<Account> listAccount) {
-        this.listAccount = listAccount;
-    }
 
     public int getId() {
         return id;
@@ -28,6 +15,7 @@ public class Person {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public String getMail() {
         return mail;

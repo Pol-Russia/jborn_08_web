@@ -1,6 +1,6 @@
-package ru.titov.s02.dao.domain;
+package ru.titov.s02.dao;
 
-import ru.titov.s02.dao.Dao;
+import ru.titov.s02.dao.domain.Transaction;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,15 +10,22 @@ import static ru.titov.s02.dao.DaoFactory.getConnection;
 
 public class TransactionDao implements Dao<Transaction, Integer> {
 
-    private  Transaction getAccount(ResultSet rs, Transaction transaction) throws SQLException {
+    private  Transaction getTransaction(ResultSet rs, Transaction transaction) throws SQLException {
 
         transaction.setId(rs.getInt(1));
         transaction.setAccountID(rs.getInt(2));
-        transaction.setSum(rs.getLong(3));
+        transaction.setSum(rs.getBigDecimal(3));
         transaction.setDate(rs.getDate(4));
         transaction.setCategorieID(rs.getInt(5));
 
         return transaction;
+    }
+
+    private void setTransaction(PreparedStatement preparedStatement, Transaction transaction) throws SQLException {
+        preparedStatement.setInt(1, transaction.getAccountID());
+        preparedStatement.setBigDecimal(2, transaction.getSum());
+        preparedStatement.setDate(3, (Date) transaction.getDate());
+        preparedStatement.setInt(4, transaction.getCategorieID());
     }
 
     @Override
@@ -26,13 +33,14 @@ public class TransactionDao implements Dao<Transaction, Integer> {
         Transaction transaction = new Transaction();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction" +
+                     "WHERE (transaction.id = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From transaction" +
-                    "WHERE (transaction.id = " + id + ")");
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                return getAccount(rs, transaction);
+                return getTransaction(rs, transaction);
             }
         }
         catch (SQLException exept) {
@@ -53,7 +61,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
 
             while (rs.next()) {
                 Transaction transaction = new Transaction();
-                list.add(getAccount(rs, transaction));
+                list.add(getTransaction(rs, transaction));
             }
         }
         catch (SQLException exept) {
@@ -67,28 +75,18 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     public Transaction insert(Transaction transaction) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transaction(id," +
-                     "account_id, sum, date, categorie_id) VALUES( ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);)
+                     "account_id, sum, date, categorie_id) VALUES( ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);)
         {
 
-            preparedStatement.setInt(1, transaction.getAccountID());
-            preparedStatement.setLong(2, transaction.getSum());
-            preparedStatement.setDate(3, (Date) transaction.getDate());
-            preparedStatement.setInt(4, transaction.getCategorieID());
+            setTransaction(preparedStatement, transaction);
+            preparedStatement.executeUpdate();
 
-            if (preparedStatement.execute()) {
-                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                    if (resultSet.next()) {
-                        transaction.setId(resultSet.getInt("id"));
-                    }
-
-                }
                 return transaction;
-            }
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
@@ -99,10 +97,8 @@ public class TransactionDao implements Dao<Transaction, Integer> {
                      "WHERE transaction.id = ?");)
         {
             preparedStatement.setInt(5, transaction.getId());
-            preparedStatement.setInt(1, transaction.getAccountID());
-            preparedStatement.setLong(2, transaction.getSum());
-            preparedStatement.setDate(3, (Date) transaction.getDate());
-            preparedStatement.setInt(4, transaction.getCategorieID());
+            setTransaction(preparedStatement, transaction);
+
 
             if (preparedStatement.executeUpdate() > 0) {
                 return transaction;
@@ -118,9 +114,12 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     public boolean delete(Integer id) {
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM  transaction WHERE (transaction.id = ?")) {
 
-            if (statement.executeUpdate("DELETE * FROM  transaction WHERE (transaction.id = " + id + ")") != 0) {
+
+            preparedStatement.setInt(1, id);
+
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
         }
@@ -136,14 +135,15 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     List<Transaction> list = new ArrayList<>();
 
     try (Connection connection = getConnection();
-         Statement statement = connection.createStatement()) {
+         PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
+                 "WHERE transaction.account_id = ?")) {
 
-        ResultSet rs = statement.executeQuery("Select * From transaction " +
-                "WHERE transaction.account_id =" + accountId);
+        preparedStatement.setInt(1, accountId);
+        ResultSet rs = preparedStatement.executeQuery();
 
         while (rs.next()) {
             Transaction transaction = new Transaction();
-            list.add(getAccount(rs, transaction));
+            list.add(getTransaction(rs, transaction));
         }
     }
     catch (SQLException exept) {
@@ -154,17 +154,19 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     }
 
     public List<Transaction> findByAccountIdAndData(int accountId, Date date) {
-        List<ru.titov.s02.dao.domain.Transaction> list = new ArrayList<>();
+        List<Transaction> list = new ArrayList<>();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
+                     "WHERE transaction.account_id = ? and transaction.date = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From transaction " +
-                    "WHERE transaction.account_id =" + accountId + " and transaction.date =" + date);
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setDate(2, date);
+            ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                ru.titov.s02.dao.domain.Transaction transaction = new Transaction();
-                list.add(getAccount(rs, transaction));
+                Transaction transaction = new Transaction();
+                list.add(getTransaction(rs, transaction));
             }
         }
         catch (SQLException exept) {
@@ -175,18 +177,20 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     }
 
     public List<Transaction> findByAccountIdCategorieId(int accountId, int categorieId) {
-        List<ru.titov.s02.dao.domain.Transaction> list = new ArrayList<>();
+        List<Transaction> list = new ArrayList<>();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction " +
+                     "WHERE transaction.account_id = ? and transaction.categorie_id = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From transaction " +
-                    "WHERE transaction.account_id =" + accountId +
-                    " and transaction.categorie_id = " + categorieId);
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setInt(2, categorieId);
+
+            ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                ru.titov.s02.dao.domain.Transaction transaction = new Transaction();
-                list.add(getAccount(rs, transaction));
+                Transaction transaction = new Transaction();
+                list.add(getTransaction(rs, transaction));
             }
         }
         catch (SQLException exept) {
@@ -197,18 +201,19 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     }
 
     public List<Transaction> findByAccountIdCategorieIdDate(int accountId, int categorieId, Date date) {
-        List<ru.titov.s02.dao.domain.Transaction> list = new ArrayList<>();
+        List<Transaction> list = new ArrayList<>();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction WHERE transaction.account_id =? and transaction.categorie_id = ? and transaction.date = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From transaction " +
-                    "WHERE transaction.account_id =" + accountId +
-                    " and transaction.categorie_id = " + categorieId + " and transaction.date = " + date);
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setInt(2, categorieId);
+            preparedStatement.setDate(3, date);
+            ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
                 ru.titov.s02.dao.domain.Transaction transaction = new Transaction();
-                list.add(getAccount(rs, transaction));
+                list.add(getTransaction(rs, transaction));
             }
         }
         catch (SQLException exept) {

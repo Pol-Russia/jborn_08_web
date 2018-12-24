@@ -1,7 +1,8 @@
-package ru.titov.s02.dao.domain;
+package ru.titov.s02.dao;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import ru.titov.s02.dao.Dao;
+import ru.titov.s02.dao.domain.Person;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,27 +21,17 @@ public class PersonDao implements Dao<Person, Integer> {
 
         return person;
     }
+
     private String toMD5(String start) {
         return DigestUtils.md5Hex(start);
     }
 
-    private void setPreparedStatement(PreparedStatement ps, Person person) throws SQLException {
-        ps.setString(1, person.getMail());
-        ps.setString(2, person.getPassword());
-        ps.setString(3, person.getNick());
-        ps.setString(4, person.getFullName());
-    }
+    private void setPreparedStatement(PreparedStatement preparedStatement, Person person) throws SQLException {
 
-    private Person checkPreparedStatement(PreparedStatement ps, Person person) throws SQLException {
-        if (ps.executeUpdate() > 0) {
-            try (ResultSet resultSet = ps.getGeneratedKeys()) {
-                if (resultSet.next()) {
-                    person.setId(resultSet.getInt("id"));
-                }
-            }
-            return person;
-        }
-        return null;
+        preparedStatement.setString(1, person.getMail());
+        preparedStatement.setString(2, person.getPassword());
+        preparedStatement.setString(3, person.getNick());
+        preparedStatement.setString(4, person.getFullName());
     }
 
     @Override
@@ -118,9 +109,14 @@ public class PersonDao implements Dao<Person, Integer> {
             preparedStatement.setString(1, nick);
             preparedStatement.setString(2, toMD5(password));
             ResultSet rs = preparedStatement.executeQuery();
+            int numberOfrecords = 0; //количество возвращенных записей
 
-            if (rs.next()) {
-                return getPerson(rs, person);
+            while (rs.next()) {
+                getPerson(rs, person);
+                numberOfrecords++;
+            }
+            if (numberOfrecords == 1) {
+                return person;
             }
         }
         catch (SQLException exept) {
@@ -134,17 +130,17 @@ public class PersonDao implements Dao<Person, Integer> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO person(" +
                      "e_mail, password, nick_name, full_name) VALUES(?, ?, ?, ?)",
-                     Statement.RETURN_GENERATED_KEYS);)
+                     Statement.RETURN_GENERATED_KEYS))
         {
 
-           setPreparedStatement(preparedStatement, person);
-           checkPreparedStatement(preparedStatement, person);
+            setPreparedStatement(preparedStatement, person);
+            preparedStatement.executeUpdate();
 
+            return person;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
@@ -174,9 +170,8 @@ public class PersonDao implements Dao<Person, Integer> {
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM person WHERE (person.id = ?)"))
              {
                  preparedStatement.setInt(1, id);
-                 ResultSet rs = preparedStatement.executeQuery();
 
-            if (rs.next()) {
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
         }

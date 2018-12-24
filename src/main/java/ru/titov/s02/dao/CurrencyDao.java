@@ -1,6 +1,7 @@
-package ru.titov.s02.dao.domain;
+package ru.titov.s02.dao;
 
 import ru.titov.s02.dao.Dao;
+import ru.titov.s02.dao.domain.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ public class CurrencyDao implements Dao<Currency, Integer> {
         Currency currency = new Currency();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
+                     "WHERE (currency.id = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From currency " +
-                    "WHERE (currency.id = " + id + ")");
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
 
             if (rs.next()) {
                 return getCurrency(rs, currency);
@@ -67,21 +70,13 @@ public class CurrencyDao implements Dao<Currency, Integer> {
         {
 
             preparedStatement.setString(1, currency.getNameOfCurrency());
-
-            if (preparedStatement.executeUpdate() > 0) {
-                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                    if (resultSet.next()) {
-                        currency.setId(resultSet.getInt("id"));
-                    }
-
-                }
+            preparedStatement.executeUpdate();
                 return currency;
-            }
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
@@ -108,9 +103,11 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     @Override
     public boolean delete(Integer id) {
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM currency WHERE (currency.id = ?")) {
 
-            if (statement.executeUpdate("DELETE * FROM currency WHERE (currency.id = " + id + ")") != 0) {
+            preparedStatement.setInt(1, id);
+
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
         }

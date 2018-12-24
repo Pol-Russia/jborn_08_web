@@ -1,6 +1,7 @@
-package ru.titov.s02.dao.domain;
+package ru.titov.s02.dao;
 
 import ru.titov.s02.dao.Dao;
+import ru.titov.s02.dao.domain.Categorie;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ public class CategorieDao implements Dao<Categorie, Integer> {
         Categorie categorie = new Categorie();
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From categorie " +
+                     "WHERE (categorie.id = ?")) {
 
-            ResultSet rs = statement.executeQuery("Select * From categorie " +
-                    "WHERE (categorie.id = " + id + ")");
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
                 return getCategorie(rs, categorie);
@@ -69,24 +71,13 @@ public class CategorieDao implements Dao<Categorie, Integer> {
         {
 
             preparedStatement.setString(1, categorie.getDescription());
+            preparedStatement.executeUpdate();
 
-            if (preparedStatement.executeUpdate() > 0) {
-                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                    if (resultSet.next()) {
-                        categorie.setId(resultSet.getInt("id"));
-
-                        return categorie;
-                    }
-
-                }
-
-            }
+            return categorie;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     @Override
@@ -114,11 +105,14 @@ public class CategorieDao implements Dao<Categorie, Integer> {
     @Override
     public boolean delete(Integer id) {
         try (Connection connection = getConnection();
-        Statement statement = connection.createStatement()) {
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM categorie WHERE (categorie.id = ?" )) {
 
-            if (statement.executeUpdate("DELETE * FROM categorie WHERE (categorie.id = " + id + ")") != 0) {
+            preparedStatement.setInt(1, id);
+
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
+
         }
         catch (SQLException exept) {
             throw new RuntimeException(exept);
