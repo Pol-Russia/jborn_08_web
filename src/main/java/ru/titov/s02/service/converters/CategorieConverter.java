@@ -1,7 +1,10 @@
 package ru.titov.s02.service.converters;
 
 import ru.titov.s02.dao.domain.Categorie;
-import ru.titov.s02.view.dto.CategorieDto;
+import ru.titov.s02.service.dto.CategorieDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategorieConverter {
 
@@ -33,6 +36,24 @@ public class CategorieConverter {
 
         return null;
     }
+
+    public List<CategorieDto> listCategorieToListCategorieDtoConvert(List<Categorie> categorie) {
+
+        if (categorie == null) {
+            return null;
+        }
+
+        List<CategorieDto> listCategorieDto = new ArrayList<>();
+        CategorieConverter converter = new CategorieConverter();
+
+        for (Categorie cat : categorie) {
+
+            listCategorieDto.add(converter.categorieToCategorieDtoConvert(cat));
+        }
+
+        return listCategorieDto;
+    }
+
 
 
 }

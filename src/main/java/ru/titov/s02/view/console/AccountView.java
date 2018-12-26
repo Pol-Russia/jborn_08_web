@@ -6,9 +6,9 @@ import ru.titov.s02.dao.domain.Person;
 import ru.titov.s02.service.AccountService;
 import ru.titov.s02.service.converters.AccountConverter;
 import ru.titov.s02.service.converters.UserConverter;
-import ru.titov.s02.view.dto.AccountDto;
-import ru.titov.s02.view.dto.CurrencyDto;
-import ru.titov.s02.view.dto.UserDto;
+import ru.titov.s02.service.dto.AccountDto;
+import ru.titov.s02.service.dto.CurrencyDto;
+import ru.titov.s02.service.dto.UserDto;
 
 
 import java.math.BigDecimal;
@@ -22,13 +22,12 @@ public class AccountView {
         private Scanner scanner = new Scanner(System.in);
 
 
-        public Account createNewAccount(AccountDto accountDto) {
+        public AccountDto createNewAccount(AccountDto accountDto) {
 
-        Account account = new AccountConverter().accountDtoToAccountConvert(accountDto);
 
-        if (new AccountService().createNewAccount(account) != null) {
-            System.out.println("New account number =" + account.getNumberAccount() + " successfully created!");
-            return account;
+        if (new AccountService().createNewAccount(accountDto) != null) {
+            System.out.println("New account number =" + accountDto.getNumberAccount() + " successfully created!");
+            return accountDto;
 
         } else {
                System.out.println("Не удалось создать счёт! Проверьте данные! ");
@@ -57,13 +56,13 @@ public class AccountView {
 
                             //Вывести список имеющихся валют
                             // Либо создать свою валюту
-                            List<Currency> list = new CurrencyView().findAllCurrencyDto();
+                            List<CurrencyDto> list = new CurrencyView().findAllCurrencyDto();
                             int count = 1;
                             if (list == null) {
                                 //Создаю валюту
                             }
-                            for (Currency currency : list) {
-                                System.out.println("please press " + count + " for choose " + currency.getNameOfCurrency());
+                            for (CurrencyDto currency : list) {
+                                System.out.println("please press " + count + " for choose " + currency.getNameCurrency());
                             }
                             System.out.println("please press 0 for create new currency ");
                             System.out.println("for exit press q or Q");
@@ -80,7 +79,7 @@ public class AccountView {
 
                                     CurrencyView currencyView = new CurrencyView();
                                     CurrencyDto currencyDto = new CurrencyView().createCurrencyDto();
-                                    Currency currency = currencyView.createNewCurrency(currencyDto);
+                                    CurrencyDto currency = currencyView.createNewCurrency(currencyDto);
 
                                     if (currency != null) {
                                         accountDto.setCurrencyId(currency.getId());
@@ -135,9 +134,9 @@ public class AccountView {
 
     }
 
-    public List<Account> ShowAccount(UserDto userDto) {
-        Person person = new UserConverter().userDtoToPersonConvert(userDto);
-         return new AccountService().findByPesonId(person);
+        public List<AccountDto> ShowAccount(UserDto userDto) {
+
+         return new AccountService().findByPesonId(userDto);
     }
 
 

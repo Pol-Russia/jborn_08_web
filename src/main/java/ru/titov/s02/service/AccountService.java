@@ -4,106 +4,88 @@ import ru.titov.s02.dao.AccountDao;
 import ru.titov.s02.dao.CurrencyDao;
 import ru.titov.s02.dao.PersonDao;
 import ru.titov.s02.dao.domain.Account;
-import ru.titov.s02.dao.domain.Person;
+import ru.titov.s02.service.converters.AccountConverter;
+import ru.titov.s02.service.dto.AccountDto;
+import ru.titov.s02.service.dto.UserDto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
 
     private final AccountDao accountDao = new AccountDao();
 
-    private void setAccount(Account account, int numberAccount, int personId, int currencyId, String description) {
-        account.setNumberAccount(numberAccount);
-        account.setPersonID(personId);
-        account.setBalance(BigDecimal.valueOf(0));
-        account.setCurrencyID(currencyId);
-        account.setDescription(description);
-    }
+    public AccountDto createNewAccount(AccountDto accountDto) {
 
-    public Account createNewAccount(Account account) {
-
-         if (account == null) {
+         if (accountDto == null) {
              return null;
          }
 
-        if (accountDao.findByPersonId(account.getPersonID()).size() < 5 && checkPersonId(account.getPersonID()) && checkCurrencyId(account.getCurrencyID())
-                && checkNumberAccount(account.getNumberAccount())) { // Не более 5 счетов в одни руки!
-            setAccount(account, account.getNumberAccount(), account.getPersonID(), account.getCurrencyID(), account.getDescription());
+         Account account = new AccountConverter().accountDtoToAccountConvert(accountDto);
 
-            return accountDao.insert(account);
+        if (accountDao.findByPersonId(account.getPersonID()).size() < 5 && checkPersonId(accountDto) && checkCurrencyId(accountDto)
+                && checkNumberAccount(accountDto)) { // Не более 5 счетов в одни руки!
+
+            return new AccountConverter().accountToAccountDtoConvert(accountDao.insert(account));
         }
 
         return null;
     }
 
-    public List<Account> downloadListAccount() {
-        return accountDao.findByAll();
+    public List<AccountDto> downloadListAccount() {
+
+        return new AccountConverter().listAccountToListAccountDtoConvert(accountDao.findByAll());
     }
 
-    public List<Account> findByPesonId(Person person) {
-        return accountDao.findByPersonId(person.getId());
+    public List<AccountDto> findByPesonId(UserDto personDto) {
+
+        return new AccountConverter().listAccountToListAccountDtoConvert(accountDao.findByPersonId(personDto.getId()));
     }
 
-    private boolean checkNumberAccount(int number) {
+    private boolean checkNumberAccount(AccountDto accountDto) {
 
-        List<Account> list = downloadListAccount();
-        int size = list.size();
+        if (accountDao.findByNumberAccount(accountDto.getNumberAccount()) != null) {
 
-
-        for (int i = 0; i < size; i++) {
-
-            if (number == list.get(i).getNumberAccount()) {
-                return false; //Если нашел номер счёта, то он уже есть и не ... его снова добавлять!
-            }
+            return true;
         }
-        return true;
+
+        return false;
     }
 
-    private boolean checkPersonId(int personId) {
+    private boolean checkPersonId(AccountDto accountDto) {
         PersonDao personDao = null;
 
-        if (personDao.findById(personId) != null) {
+        if (personDao.findById(accountDto.getPersonId()) != null) {
             return true;
         }
         return false;
     }
 
-    private boolean checkCurrencyId(int currencyId) {
+    private boolean checkCurrencyId(AccountDto accountDto) {
         CurrencyDao currencyDao = null;
 
-        if (currencyDao.findById(currencyId) != null) { //Существует
+        if (currencyDao.findById(accountDto.getCurrencyId()) != null) { //Существует
             return true;
         }
 
         return false; //Не существует
     }
 
-    public Account updateAccount(int id, int numberAccount, int personId, BigDecimal balance, int currencyId, String description) {
+    public AccountDto updateAccount(AccountDto accountDto) {
 
-        Account account;
-        account = accountDao.findById(id);
+        Account account = new AccountConverter().accountDtoToAccountConvert(accountDto);
 
-        if (account != null) {
+        if (accountDao.findById(account.getId()) != null) {
 
-            if (description != null && ! description.isEmpty() && (! checkNumberAccount(numberAccount)) && checkPersonId(personId) && (checkCurrencyId(currencyId))) {
-                account.setDescription(description);
-                account.setNumberAccount(numberAccount);
-                account.setCurrencyID(currencyId);
-                account.setPersonID(personId);
-                account.setBalance(balance);
-                account.setId(id);
-               return accountDao.update(account);
+               return new AccountConverter().accountToAccountDtoConvert(accountDao.update(account));
             }
 
-
-
-        }
         return null;
     }
 
-    public boolean deleteAccount(int id) {
+    public boolean deleteAccount(AccountDto accountDto) {
 
-        return accountDao.delete(id);
+        return accountDao.delete(accountDto.getId());
     }
 }

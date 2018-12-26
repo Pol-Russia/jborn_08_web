@@ -116,4 +116,25 @@ public class CurrencyDao implements Dao<Currency, Integer> {
         }
         return false;
     }
+
+    public Currency findByNameCurrency(Currency currency) {
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
+                     "WHERE (currency.name_of_currency = ?")) {
+
+            preparedStatement.setString(1, currency.getNameOfCurrency());
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                return getCurrency(rs, currency);
+            }
+        }
+        catch (SQLException exept) {
+            throw new RuntimeException(exept);
+        }
+
+         return null;
+
+    }
 }

@@ -85,6 +85,12 @@ public class AccountDao implements Dao<Account, Integer> {
 
             if (preparedStatement.executeUpdate() > 0) {
 
+                ResultSet rs = preparedStatement.getGeneratedKeys();
+                if (rs.next()) {
+                    int id = rs.getInt(1); //вставленный ключ
+                    account.setId(id);
+                }
+
                 return account;
             }
         }
@@ -178,7 +184,5 @@ public class AccountDao implements Dao<Account, Integer> {
 
         return list;
     }
-
-
 
 }

@@ -1,10 +1,11 @@
 package ru.titov.s02.service.converters;
 
-import ru.titov.s02.dao.AccountDao;
 import ru.titov.s02.dao.domain.Account;
-import ru.titov.s02.view.dto.AccountDto;
+import ru.titov.s02.service.dto.AccountDto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountConverter {
 
@@ -49,6 +50,23 @@ public class AccountConverter {
             return accountDto;
         }
         return null;
+    }
+
+    public List<AccountDto> listAccountToListAccountDtoConvert(List<Account> account) {
+
+        if (account == null) {
+            return null;
+        }
+
+        List<AccountDto> listAccountDto = new ArrayList<>();
+        AccountConverter converter = new AccountConverter();
+
+        for (Account a : account) {
+
+            listAccountDto.add(converter.accountToAccountDtoConvert(a));
+        }
+
+        return listAccountDto;
     }
 
 }

@@ -2,6 +2,8 @@ package ru.titov.s02.service;
 
 import ru.titov.s02.dao.CategorieDao;
 import ru.titov.s02.dao.domain.Categorie;
+import ru.titov.s02.service.converters.CategorieConverter;
+import ru.titov.s02.service.dto.CategorieDto;
 
 import java.util.List;
 
@@ -9,53 +11,57 @@ public class CategorieService {
 
     private final CategorieDao categorieDao = new CategorieDao();
 
-    public Categorie createNewCategorie(Categorie categorie) {
+    public CategorieDto createNewCategorie(CategorieDto categorieDto) {
 
-        if (categorie != null && ! categorie.getDescription().isEmpty() && checkDescription(categorie)) {
+        if (checkDescription(categorieDto)) {
 
-            return categorieDao.insert(categorie);
+            Categorie categorie = new CategorieConverter().categorieDtoToCategorieConvert(categorieDto);
+
+            categorie = categorieDao.insert(categorie);
+
+            categorieDto = new CategorieConverter().categorieToCategorieDtoConvert(categorie);
+
+            return categorieDto;
         }
 
         return null;
     }
 
-    public Categorie updateCategorie(Categorie categorie) {
+    public CategorieDto updateCategorie(CategorieDto categorieDto) {
+
+        Categorie categorie = new CategorieConverter().categorieDtoToCategorieConvert(categorieDto);
 
         categorie = categorieDao.findById(categorie.getId());
 
-        if (categorie != null && checkDescription(categorie)) {
+        if (categorie != null && checkDescription(categorieDto)) {
 
-            if (! categorie.getDescription().isEmpty()) {
-                categorie.setDescription(categorie.getDescription());
-                return categorieDao.update(categorie);
-            }
+                categorie = categorieDao.update(categorie);
+
+                return new CategorieConverter().categorieToCategorieDtoConvert(categorie);
+
         }
 
         return null;
     }
 
-    public List<Categorie> downloadListCategorie() {
+    public List<CategorieDto> downloadListCategorie() {
 
-        return categorieDao.findByAll();
+        return  new CategorieConverter().listCategorieToListCategorieDtoConvert(categorieDao.findByAll());
     }
 
-    public boolean checkDescription(Categorie categorie) {
+    public boolean checkDescription(CategorieDto categorieDto) {
 
-        List<Categorie> list = downloadListCategorie();
-        int size = list.size();
+        Categorie categorie = new CategorieConverter().categorieDtoToCategorieConvert(categorieDto);
+        categorie = categorieDao.findByDescription(categorie);
 
-
-        for (int i = 0; i < size; i++) {
-
-            if (categorie.getDescription().equalsIgnoreCase(list.get(i).getDescription())) {
-
-                return false;
-            }
+        if (categorie != null) {
+            return false;
         }
+
         return true;
     }
 
-    public boolean deleteCategorie(Categorie categorie) {
+    public boolean deleteCategorie(CategorieDto categorie) {
 
         if (categorie != null) {
             return categorieDao.delete(categorie.getId());

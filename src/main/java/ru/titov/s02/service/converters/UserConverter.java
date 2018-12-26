@@ -2,7 +2,10 @@ package ru.titov.s02.service.converters;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import ru.titov.s02.dao.domain.Person;
-import ru.titov.s02.view.dto.UserDto;
+import ru.titov.s02.service.dto.UserDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserConverter  {
 
@@ -49,6 +52,24 @@ public class UserConverter  {
 
         return null;
     }
+
+    public List<UserDto> listPersonToListUserDtoConvert(List<Person> person) {
+
+        if (person == null) {
+            return null;
+        }
+
+        List<UserDto> listUserDto = new ArrayList<>();
+        UserConverter converter = new UserConverter();
+
+        for (Person pers : person) {
+
+            listUserDto.add(converter.personToUserDtoConvert(pers));
+        }
+
+        return listUserDto;
+    }
+
 
 
 }
