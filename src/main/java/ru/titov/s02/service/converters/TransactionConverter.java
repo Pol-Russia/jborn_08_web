@@ -1,8 +1,10 @@
 package ru.titov.s02.service.converters;
 
 import ru.titov.s02.dao.domain.Transaction;
-import ru.titov.s02.view.console.Talking;
-import ru.titov.s02.view.dto.TransactionDto;
+import ru.titov.s02.service.dto.TransactionDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionConverter {
 
@@ -40,6 +42,24 @@ public class TransactionConverter {
 
         return null;
     }
+
+    public List<TransactionDto> listTransactionToListTransactionDtoConvert(List<Transaction> transactions) {
+
+        if (transactions == null) {
+            return null;
+        }
+
+        List<TransactionDto> listTransactionDto = new ArrayList<>();
+        TransactionConverter converter = new TransactionConverter();
+
+        for (Transaction tran : transactions) {
+
+            listTransactionDto.add(converter.transactionToTransactionDtoConvert(tran));
+        }
+
+        return listTransactionDto;
+    }
+
 
 
 }

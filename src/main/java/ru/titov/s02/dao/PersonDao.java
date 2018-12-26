@@ -1,7 +1,5 @@
 package ru.titov.s02.dao;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import ru.titov.s02.dao.Dao;
 import ru.titov.s02.dao.domain.Person;
 
 import java.sql.*;
@@ -20,10 +18,6 @@ public class PersonDao implements Dao<Person, Integer> {
         person.setFullName(rs.getString(5));
 
         return person;
-    }
-
-    private String toMD5(String start) {
-        return DigestUtils.md5Hex(start);
     }
 
     private void setPreparedStatement(PreparedStatement preparedStatement, Person person) throws SQLException {
@@ -99,15 +93,18 @@ public class PersonDao implements Dao<Person, Integer> {
         return null;
     }
 
-    public Person findByNickAndPassword(String nick, String password) {
-        Person person = new Person();
+    public Person findByNickAndPassword(Person person) {
+
+        if (person == null) {
+            return null;
+        }
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From person " +
                      "WHERE (person.nick_name = ? and person.password = ?)")) {
 
-            preparedStatement.setString(1, nick);
-            preparedStatement.setString(2, toMD5(password));
+            preparedStatement.setString(1, person.getNick());
+            preparedStatement.setString(2, person.getPassword());
             ResultSet rs = preparedStatement.executeQuery();
             int numberOfrecords = 0; //количество возвращенных записей
 
@@ -135,6 +132,12 @@ public class PersonDao implements Dao<Person, Integer> {
 
             setPreparedStatement(preparedStatement, person);
             preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+
+            if (rs.next()) {
+                int id = rs.getInt(1); //вставленный ключ
+                person.setId(id);
+            }
 
             return person;
 

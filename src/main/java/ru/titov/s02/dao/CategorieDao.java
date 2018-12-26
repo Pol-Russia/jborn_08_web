@@ -11,6 +11,26 @@ import static ru.titov.s02.dao.DaoFactory.getConnection;
 
 public class CategorieDao implements Dao<Categorie, Integer> {
 
+    public Categorie findByDescription(Categorie categorie) {
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From categorie " +
+                     "WHERE (categorie.description = ?")) {
+
+            preparedStatement.setString(1, categorie.getDescription());
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                return getCategorie(rs, categorie);
+            }
+        }
+        catch (SQLException exept) {
+            throw new RuntimeException(exept);
+        }
+
+        return null;
+    }
+
     @Override
     public Categorie findById(Integer id) {
         Categorie categorie = new Categorie();
@@ -92,6 +112,13 @@ public class CategorieDao implements Dao<Categorie, Integer> {
             preparedStatement.setString(1, categorie.getDescription());
 
             if (preparedStatement.executeUpdate() > 0) {
+
+                ResultSet rs = preparedStatement.getGeneratedKeys();
+
+                if (rs.next()) {
+                    int id = rs.getInt(1); //вставленный ключ
+                    categorie.setId(id);
+                }
 
                 return categorie;
             }

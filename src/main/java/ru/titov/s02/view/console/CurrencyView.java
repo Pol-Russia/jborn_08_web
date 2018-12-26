@@ -3,7 +3,7 @@ package ru.titov.s02.view.console;
 import ru.titov.s02.dao.domain.Currency;
 import ru.titov.s02.service.CurrencyService;
 import ru.titov.s02.service.converters.CurrencyConverter;
-import ru.titov.s02.view.dto.CurrencyDto;
+import ru.titov.s02.service.dto.CurrencyDto;
 
 import java.util.List;
 import java.util.Scanner;
@@ -13,21 +13,18 @@ import java.util.regex.Pattern;
 public class CurrencyView {
     private final CurrencyService service = new CurrencyService();
 
-    public Currency createNewCurrency(CurrencyDto currencyDto) {
+    public CurrencyDto createNewCurrency(CurrencyDto currencyDto) {
 
-            Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
-
-
-            if (! service.checkNameOfCurrency(currency)) {
+            if (service.checkNameOfCurrency(currencyDto)) {
 
                 System.out.println("Возможно данная валюта " + currencyDto.getNameCurrency() + " уже зарегистрирована!" +
                         "\n Повторная регистрация запрещена!");
                 return null;
             }
 
-            if (service.createNewCurrency(currency) != null) {
+            if (service.createNewCurrency(currencyDto) != null) {
                 System.out.println("New currency " + currencyDto.getNameCurrency() + " successfully created!");
-                return currency;
+                return currencyDto;
         } else {
             System.out.println("Что то пошло не так!");
             return null;
@@ -54,7 +51,7 @@ public class CurrencyView {
     }
 
     public boolean validateCurrency(String nameCurrency) {
-        if (nameCurrency != null && nameCurrency.length() > 15 || nameCurrency.length()  < 1) {
+        if (nameCurrency != null && nameCurrency.length() < 15 || nameCurrency.length()  >= 1) {
             System.out.println("name of currency must contain from 1 to 15 letters!");
             return false;
         }
@@ -64,9 +61,9 @@ public class CurrencyView {
         return m.matches();
     }
 
-    public List<Currency> findAllCurrencyDto() {
+    public List<CurrencyDto> findAllCurrencyDto() {
 
-        List<Currency> list = service.downloadListCurrency();
+        List<CurrencyDto> list = service.downloadListCurrency();
 
         if (list != null && list.size() >0 ) {
             return list;

@@ -1,12 +1,8 @@
 package ru.titov.s02.view.console;
 
-import ru.titov.s02.dao.domain.Person;
 import ru.titov.s02.service.PersonService;
-import ru.titov.s02.service.converters.UserConverter;
-import ru.titov.s02.view.dto.AccountDto;
-import ru.titov.s02.view.dto.UserDto;
+import ru.titov.s02.service.dto.UserDto;
 
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,15 +12,15 @@ public class UserView {
     Scanner scanner = new Scanner(System.in);
 
 
-    public Person createNewPerson(UserDto userDto) {
+    public UserDto createNewPerson(UserDto userDto) {
 
         if (userDto != null) {
 
-            Person person = new UserConverter().userDtoToPersonConvert(userDto);
+            userDto = new PersonService().createNewPerson(userDto);
 
-            if (new PersonService().createNewPerson(person) != null) {
+            if (userDto != null) {
                 System.out.println("New userDto " + userDto.getMail() + " successfully created!");
-                return person;
+                return userDto;
             } else {
                 System.out.println("Возможно данный e-mail " + userDto.getMail() + " уже зарегистрирован!" +
                         "\n Повторная регистрация запрещена!");
@@ -151,16 +147,14 @@ public class UserView {
         return true;
     }
 
-    Person isExistUser() {
+    UserDto isExistUser() {
         UserDto userDto = getMailTalking();
 
         if (userDto != null) {
 
-            Person person = new UserConverter().userDtoToPersonConvert(userDto);
-
-            if (new PersonService().checkPassword(person)) {
+            if (new PersonService().checkPassword(userDto)) {
                 System.out.println("Successfully!");
-                return person;
+                return userDto;
             }
         }
         return null;

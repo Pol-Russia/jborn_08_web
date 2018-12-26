@@ -1,4 +1,4 @@
-package ru.titov.s02.view.dto;
+package ru.titov.s02.service.dto;
 
 
 import java.math.BigDecimal;

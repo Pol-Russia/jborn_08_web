@@ -1,7 +1,10 @@
 package ru.titov.s02.service.converters;
 
 import ru.titov.s02.dao.domain.Currency;
-import ru.titov.s02.view.dto.CurrencyDto;
+import ru.titov.s02.service.dto.CurrencyDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CurrencyConverter {
 
@@ -19,7 +22,6 @@ public class CurrencyConverter {
         return null;
     }
 
-
     public CurrencyDto currencyToCurrencyDtoConvert(Currency currency) {
 
         if (currency != null) {
@@ -33,6 +35,24 @@ public class CurrencyConverter {
 
         return null;
     }
+
+    public List<CurrencyDto> listCurrencyToListCurrencyDtoConvert(List<Currency> currency) {
+
+        if (currency == null) {
+            return null;
+        }
+
+        List<CurrencyDto> listCurrencyDto = new ArrayList<>();
+        CurrencyConverter converter = new CurrencyConverter();
+
+        for (Currency c : currency) {
+
+            listCurrencyDto.add(converter.currencyToCurrencyDtoConvert(c));
+        }
+
+        return listCurrencyDto;
+    }
+
 
 
 

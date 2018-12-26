@@ -1,33 +1,27 @@
 package ru.titov.s02.view.console;
 
-import ru.titov.s02.dao.domain.Account;
+import ru.titov.s02.dao.CategorieDao;
 import ru.titov.s02.dao.domain.Categorie;
 import ru.titov.s02.dao.domain.Transaction;
 import ru.titov.s02.service.TransactionService;
 import ru.titov.s02.service.converters.TransactionConverter;
-import ru.titov.s02.view.dto.AccountDto;
-import ru.titov.s02.view.dto.CategorieDto;
-import ru.titov.s02.view.dto.TransactionDto;
+import ru.titov.s02.service.dto.AccountDto;
+import ru.titov.s02.service.dto.CategorieDto;
+import ru.titov.s02.service.dto.TransactionDto;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TransactionView {
     private Scanner scanner = new Scanner(System.in);
 
-    public Transaction createNewTransaction(TransactionDto transactionDto) {
+    public TransactionDto createNewTransaction(TransactionDto transactionDto) {
 
-        Transaction transaction = new TransactionConverter().transactionDtoToTransactionConvert(transactionDto);
-
-        if (new TransactionService().createNewTransaction(transaction) != null) {
-            System.out.println("New account number =" + transaction.getId() + " successfully created!");
-            return transaction;
+        if (new TransactionService().createNewTransaction(transactionDto) != null) {
+            System.out.println("New account number =" + transactionDto.getId() + " successfully created!");
+            return transactionDto;
 
         } else {
             System.out.println("Ошибка записи транзакции в БД!");
@@ -35,7 +29,7 @@ public class TransactionView {
         }
     }
 
-    public TransactionDto createAccountDto(AccountDto accountDto) {
+    public TransactionDto createTransactionDto(AccountDto accountDto) {
 
         System.out.println("Please print your sum and press <Enter>");
         BigDecimal sum = scanner.nextBigDecimal();
@@ -50,9 +44,9 @@ public class TransactionView {
                 System.out.println("Please print your account description and press <Enter>");
              //Вывести список имеющихся категорий транзакци
             // Либо создать НОВУЮ
-                        List<Categorie> list = new CategorieView().findAllCategorieDto();
+                        List<CategorieDto> list = new CategorieView().findAllCategorieDto();
                         int count = 1;
-                        for (Categorie categorie : list) {
+                        for (CategorieDto categorie : list) {
                             System.out.println("please press " + count + " for choose " + categorie.getDescription());
                         }
                         System.out.println("please press 0 for create new categorie description ");
@@ -70,10 +64,10 @@ public class TransactionView {
 
                                 CategorieView categorieView = new CategorieView();
                                 CategorieDto categorieDto = new CategorieView().createCategorieDto();
-                                Categorie categorie = categorieView.createNewCategorie(categorieDto);
+                                categorieDto = categorieView.createNewCategorie(categorieDto);
 
-                                if (categorie != null) {
-                                    transactionDto.setCategorieID(categorie.getId());
+                                if (categorieDto != null) {
+                                    transactionDto.setCategorieID(categorieDto.getId());
                                     return transactionDto;
                                 }
                             }
@@ -85,5 +79,11 @@ public class TransactionView {
                 }
 
        }
+
+    public List<TransactionDto> ShowAccount(AccountDto accountDto) {
+
+        return new TransactionService().findTransactionByAccountId(accountDto);
     }
+
+}
 

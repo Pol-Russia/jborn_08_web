@@ -3,7 +3,7 @@ package ru.titov.s02.view.console;
 import ru.titov.s02.dao.domain.Categorie;
 import ru.titov.s02.service.CategorieService;
 import ru.titov.s02.service.converters.CategorieConverter;
-import ru.titov.s02.view.dto.CategorieDto;
+import ru.titov.s02.service.dto.CategorieDto;
 
 import java.util.List;
 import java.util.Scanner;
@@ -12,27 +12,27 @@ public class CategorieView {
     private final CategorieService service = new CategorieService();
 
 
-    public Categorie createNewCategorie(CategorieDto categorieDto) {
+    public CategorieDto createNewCategorie(CategorieDto categorieDto) {
 
-        Categorie categorie = new CategorieConverter().categorieDtoToCategorieConvert(categorieDto);
         CategorieService service = new CategorieService();
 
-        if (! service.checkDescription(categorie)) {
+        if (service.checkDescription(categorieDto)) {
             System.out.println("The same DESCRIPTION already exist....");
             return null;
         }
-        else  if (service.createNewCategorie(categorie) != null)  {
+        else {
+            categorieDto = service.createNewCategorie(categorieDto);
+
+            if (categorieDto != null) {
 
                 System.out.println("New description " + categorieDto.getDescription() + " successfully created!");
-                return categorie;
+                return categorieDto;
+            }
         }
-        else {
+
             System.out.println("Что-то пошло не так...");
             return null;
-        }
-
     }
-
 
     public CategorieDto createCategorieDto() {
 
@@ -53,7 +53,6 @@ public class CategorieView {
         return null;
     }
 
-
     public boolean validateDescription(String description) {
         if (description != null && description.length() < 25 && description.length() > 4) {
             System.out.println("Description must contain from 4 to 25 letters!");
@@ -62,9 +61,9 @@ public class CategorieView {
         return true;
     }
 
-    public List<Categorie> findAllCategorieDto() {
+    public List<CategorieDto> findAllCategorieDto() {
 
-        List<Categorie> list = service.downloadListCategorie();
+        List<CategorieDto> list = service.downloadListCategorie();
 
         if (list != null && list.size() >0 ) {
             return list;

@@ -2,6 +2,8 @@ package ru.titov.s02.service;
 
 import ru.titov.s02.dao.CurrencyDao;
 import ru.titov.s02.dao.domain.Currency;
+import ru.titov.s02.service.converters.CurrencyConverter;
+import ru.titov.s02.service.dto.CurrencyDto;
 
 import java.util.List;
 
@@ -9,54 +11,59 @@ public class CurrencyService {
 
     private final CurrencyDao currencyDao = new CurrencyDao();
 
-    public Currency createNewCurrency(Currency currency) {
+    public CurrencyDto createNewCurrency(CurrencyDto currencyDto) {
 
-        if (currency != null && ! currency.getNameOfCurrency().isEmpty() && (checkNameOfCurrency(currency))) {//Если валюта
+        if (currencyDto != null && ! currencyDto.getNameCurrency().isEmpty() && (checkNameOfCurrency(currencyDto))) {//Если валюта
             //уже существует она не будет создана повторно
 
-            return currencyDao.insert(currency);
+            Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
+            currency = currencyDao.insert(currency);
+
+            if (currency != null) {
+                currencyDto = new CurrencyConverter().currencyToCurrencyDtoConvert(currency);
+                return currencyDto;
+            }
         }
         return null;
     }
 
-    public List<Currency> downloadListCurrency() {
+    public List<CurrencyDto> downloadListCurrency() {
 
-        return currencyDao.findByAll();
+        return new CurrencyConverter().listCurrencyToListCurrencyDtoConvert(currencyDao.findByAll());
     }
 
-    public boolean checkNameOfCurrency(Currency currency) {
+    public boolean checkNameOfCurrency(CurrencyDto currencyDto) {
 
-        List<Currency> list = downloadListCurrency();
-        int size = list.size();
+        Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
+        currency = currencyDao.findByNameCurrency(currency);
 
-
-        for (int i = 0; i < size; i++) {
-
-            if (currency.getNameOfCurrency().equalsIgnoreCase(list.get(i).getNameOfCurrency())) {
-                return false;
-
-            }
+        if (currency != null) {
+            return false;
         }
+
         return true;
     }
 
-    public Currency updateCurrency(Currency currency) {
+
+    public CurrencyDto updateCurrency(CurrencyDto currencyDto) {
 
         Currency updateCurrency;
-        updateCurrency = currencyDao.findById(currency.getId());
+        updateCurrency = currencyDao.findById(currencyDto.getId());
 
-            if (updateCurrency != null && ! currency.getNameOfCurrency().isEmpty() && (checkNameOfCurrency(currency))) {
+            if (updateCurrency != null &&  (checkNameOfCurrency(currencyDto))) {
 
-                updateCurrency.setNameOfCurrency(currency.getNameOfCurrency());
-                return  currencyDao.update(updateCurrency);
+                updateCurrency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
+                updateCurrency =  currencyDao.update(updateCurrency);
+
+                return new CurrencyConverter().currencyToCurrencyDtoConvert(updateCurrency);
             }
 
 
             return null;
     }
 
-    public boolean deleteCurrency(Currency currency) {
+    public boolean deleteCurrency(CurrencyDto currencyDto) {
 
-        return currencyDao.delete(currency.getId());
+        return currencyDao.delete(currencyDto.getId());
     }
 }

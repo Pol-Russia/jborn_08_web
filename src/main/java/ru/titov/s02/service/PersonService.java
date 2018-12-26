@@ -2,81 +2,85 @@ package ru.titov.s02.service;
 
 import ru.titov.s02.dao.PersonDao;
 import ru.titov.s02.dao.domain.Person;
+import ru.titov.s02.service.converters.UserConverter;
+import ru.titov.s02.service.dto.UserDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonService {
     private  PersonDao personDao = new PersonDao();
 
-    private void setPerson(Person person, String mail, String password, String nick, String fullName) {
-        person.setMail(mail);
-        person.setPassword(password);
-        person.setNick(nick);
-        person.setFullName(fullName);
+    private List<UserDto> downloadListUserDto() {
+
+        List<Person> person = personDao.findByAll();
+        List<UserDto> listPersonDto = new ArrayList<>();
+        UserConverter converter = new UserConverter();
+
+        for (Person p : person) {
+
+            listPersonDto.add(converter.personToUserDtoConvert(p));
+        }
+
+        return  listPersonDto;
     }
 
-    private List<Person> downloadListPerson() {
-        return personDao.findByAll();
-    }
+    public boolean checkMail(UserDto personDto) {
 
-    public boolean checkMail(Person person) {
+        Person person = new UserConverter().userDtoToPersonConvert(personDto);
+        person = personDao.findByMail(person.getMail());
 
         if (person != null) {
-            List<Person> list = downloadListPerson();
-            int size = list.size();
+            return true;
+        }
 
-            for (int i = 0; i < size; i++) {
-                if (person.getMail().equalsIgnoreCase(list.get(i).getMail())) {
+
+        return false;
+    }
+
+    public boolean checkPassword(UserDto personDto) {
+
+        Person person = new UserConverter().userDtoToPersonConvert(personDto);
+        person = personDao.findByMail(person.getMail());
+
+        if (person != null) {
+
+                if (person.getPassword().equals(personDto.getPassword())) {
                     return true;
                 }
             }
-        }
-        return false;
-    }
 
-    public boolean checkPassword(Person person) {
-
-        if (person != null) {
-
-            Person newPerson = personDao.findByMail(person.getMail());
-
-            if (newPerson != null) {
-                if (newPerson.getPassword().equals(person.getPassword())) {
-                    return true;
-                }
-            }
-        }
 
         return false;
     }
 
-    public boolean checkNickNameAndPassword(Person person) {
+    public UserDto findNickNameAndPassword(UserDto personDto) {
 
-        if (person == null) {
-            return false;
+        if (personDto == null) {
+            return null;
         }
 
-        Person newPerson = personDao.findByNickAndPassword(person.getNick(), person.getPassword());
+        Person person = new UserConverter().userDtoToPersonConvert(personDto);
+        person = personDao.findByNickAndPassword(person);
 
-            if (newPerson != null) {
-                return true;
-            }
-
-        return false;
+        return new UserConverter().personToUserDtoConvert(person);
     }
 
-    public Person createNewPerson(Person person) {
+    public UserDto createNewPerson(UserDto personDto) {
 
-        if (! checkMail(person)) {
+        Person person = new UserConverter().userDtoToPersonConvert(personDto);
 
-            setPerson(person, person.getMail(), person.getPassword(), person.getNick(), person.getFullName());
-            return  personDao.insert(person);
+        if (! checkMail(personDto)) {
+
+            return  new UserConverter().personToUserDtoConvert(personDao.insert(person));
         }
 
         return null;
     }
 
-    public boolean deletePerson(Person person) {
+    public boolean deletePerson(UserDto personDto) {
+
+        Person person = new UserConverter().userDtoToPersonConvert(personDto);
 
         if (person != null) {
             return personDao.delete(person.getId());
@@ -84,15 +88,15 @@ public class PersonService {
         return false;
     }
 
-    public Person updatePerson(Person person) {
+    public UserDto updatePerson(UserDto personDto) {
 
-        Person newPerson = personDao.findById(person.getId());
+        Person person = new UserConverter().userDtoToPersonConvert(personDto);
+        person = personDao.findById(person.getId());
 
-        if (newPerson == null) {
+        if (person == null) {
             return null;
         }
 
-        personDao.update(person);
-        return person;
+         return  new UserConverter().personToUserDtoConvert(personDao.update(person));
     }
 }

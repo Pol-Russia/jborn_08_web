@@ -1,21 +1,97 @@
 package ru.titov.s02.view.console;
 
-import ru.titov.s02.dao.domain.Account;
-import ru.titov.s02.dao.domain.Person;
-import ru.titov.s02.service.converters.UserConverter;
-import ru.titov.s02.view.dto.AccountDto;
-import ru.titov.s02.view.dto.UserDto;
+import ru.titov.s02.service.dto.*;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class Talking {
 
+    public UserDto newUser() {
+        UserView userView = new UserView();
+        UserDto userDto = userView.createUserDto();
+
+        if (userDto != null) {
+            UserDto person = userView.createNewPerson(userDto);
+            return person;
+        }
+        return null;
+    }
+
+    public UserDto isRegisteredUser() {
+
+        UserDto person = new UserView().isExistUser();
+
+            return person;
+    }
+
+    public CurrencyDto newCurrency() {
+        CurrencyView currencyView = new CurrencyView();
+        CurrencyDto currencyDto = currencyView.createCurrencyDto();
+
+        if (currencyDto != null) {
+            currencyDto = currencyView.createNewCurrency(currencyDto);
+            return currencyDto;
+        }
+        return null;
+    }
+
+    public List<CurrencyDto> showListCurrencyDto() {
+        return new CurrencyView().findAllCurrencyDto();
+    }
+
+    public CategorieDto newCategorie() {
+        CategorieView categorieView = new CategorieView();
+        CategorieDto categorieDto = categorieView.createCategorieDto();
+
+        if (categorieDto != null) {
+            categorieDto = categorieView.createNewCategorie(categorieDto);
+            return categorieDto;
+        }
+        return null;
+    }
+
+    public List<CategorieDto> showCategorieDto() {
+        return  new CategorieView().findAllCategorieDto();
+    }
+
+    public AccountDto newAccount(UserDto userDto) {
+        AccountView accountView = new AccountView();
+        AccountDto accountDto = accountView.createAccountDto(userDto);
+
+        if (accountDto != null) {
+            accountDto = accountView.createNewAccount(accountDto);
+            return accountDto;
+        }
+        return null;
+    }
+
+    public List<AccountDto> showPersonAccount(UserDto userDto) {
+        return new AccountView().ShowAccount(userDto);
+    }
+
+    public TransactionDto newTransaction(AccountDto accountDto) {
+        TransactionView transactionView = new TransactionView();
+        TransactionDto transactionDto = transactionView.createTransactionDto(accountDto);
+
+        if (transactionDto != null) {
+            transactionDto = transactionView.createNewTransaction(transactionDto);
+            return transactionDto;
+        }
+        return null;
+    }
+
+    public List<TransactionDto> showTransaction(AccountDto accountDto) {
+        return new TransactionView().ShowAccount(accountDto);
+    }
+
+
+
 
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Person person = null;
+        UserDto person = null;
 
 
         while (true) {
@@ -26,7 +102,8 @@ public class Talking {
             //Отображение и создание типов счетов
             //
             //Отображение и создание категорий транзакций
-            //Реализовать действие - вывести список счетов
+            //Реализовать действие - вывести список счетов юзера
+            //Реализовать перевод денежных средств с одного счета на другой используя транзакции
 
             String str = scanner.nextLine();
             if (str.equalsIgnoreCase("q")) {
@@ -63,7 +140,7 @@ public class Talking {
                         AccountDto accountDto = accountView.createAccountDto(userDto);
 
                         if (accountDto != null) {
-                            Account account = accountView.createNewAccount(accountDto);
+                            AccountDto account = accountView.createNewAccount(accountDto);
                         }
 
 
@@ -75,7 +152,7 @@ public class Talking {
             }
             if (str.equalsIgnoreCase("2")) {
 
-                Person p = new UserView().isExistUser();
+                UserDto p = new UserView().isExistUser();
                 if (person != null) {
 
                     System.out.println("Проверка прошла успешно!");
@@ -95,9 +172,9 @@ public class Talking {
                 if (str.equalsIgnoreCase("2")) {
 
                     AccountView accountView = new AccountView();
-                    List<Account> ac = accountView.ShowAccount(new UserConverter().personToUserDtoConvert(p));
-                    for (Account a : ac) {
-                        System.out.println("PersonID: " + a.getPersonID());
+                    List<AccountDto> ac = accountView.ShowAccount(p);
+                    for (AccountDto a : ac) {
+                        System.out.println("PersonID: " + a.getPersonId());
                         System.out.println("Description: " + a.getDescription());
                     }
 
