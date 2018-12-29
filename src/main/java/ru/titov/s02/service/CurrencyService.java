@@ -17,6 +17,7 @@ public class CurrencyService {
             //уже существует она не будет создана повторно
 
             Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
+
             currency = currencyDao.insert(currency);
 
             if (currency != null) {
@@ -37,11 +38,11 @@ public class CurrencyService {
         Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
         currency = currencyDao.findByNameCurrency(currency);
 
-        if (currency != null) {
-            return false;
+        if (currency == null) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 

@@ -2,6 +2,7 @@ package ru.titov.s02.view.console;
 
 import ru.titov.s02.service.dto.*;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Scanner;
 
@@ -91,7 +92,7 @@ public class Talking {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        UserDto person = null;
+        final Talking talking = new Talking();
 
 
         while (true) {
@@ -112,39 +113,29 @@ public class Talking {
             }
             if (str.equals("1")) {
 
-                UserView userView = new UserView();
-                UserDto userDto = userView.createUserDto();
+                UserDto userDto = talking.newUser();
 
                 if (userDto != null) {
-                    person = userView.createNewPerson(userDto);
-                }
-
-                if (person != null) {
 
                     System.out.println("Please press \"1\", if you wish create new account");
                     System.out.println("Please press \"2\" if you wish сreate new description your account");
                     System.out.println("Please press \"3\" for your account");
+                    System.out.println("Please press \"4\" for view list your accounts ");
                     System.out.println("for exit press \"q\" or \"Q\"");
 
                     if (str.equalsIgnoreCase("q")) {
                         System.out.println("good buy!");
                         break;
                     }
-                    if (str.equalsIgnoreCase("2")) {
+                    if (str.equalsIgnoreCase("1")) {
 
+                        AccountDto accountDto = talking.newAccount(userDto);
 
                     }
-                    else if (str.equalsIgnoreCase("1")) {
+                    if (str.equalsIgnoreCase("4"))  {
 
-                        AccountView accountView = new AccountView();
-                        AccountDto accountDto = accountView.createAccountDto(userDto);
-
-                        if (accountDto != null) {
-                            AccountDto account = accountView.createNewAccount(accountDto);
-                        }
-
-
-
+                        List<AccountDto> list = talking.showPersonAccount(userDto);
+                        System.out.println("list = " + list.toString());
                     }
                 }
 
@@ -152,43 +143,47 @@ public class Talking {
             }
             if (str.equalsIgnoreCase("2")) {
 
-                UserDto p = new UserView().isExistUser();
-                if (person != null) {
 
+                UserDto userDto = new UserView().isExistUser();
+
+
+                if (userDto != null) {
                     System.out.println("Проверка прошла успешно!");
-                }
 
-                System.out.println("Please press \"1\", if you wish create new account");
-                System.out.println("Please press \"2\" if you wish сreate new description your account");
-                System.out.println("Please press \"3\" for your account");
-                System.out.println("for exit press \"q\" or \"Q\"");
+                    System.out.println("Please press \"1\", if you wish create new account");
+                    System.out.println("Please press \"4\", for view your account");
+                    System.out.println("Please press \"2\" if you wish сreate new currency for your account");
+                    System.out.println("Please press \"3\" if you wish сreate new transaction");
+                    System.out.println("Please press \"3\" if you wish сreate new transaction categorie");
+                    System.out.println("for exit press \"q\" or \"Q\"");
 
-                str = scanner.nextLine();
+                    str = scanner.nextLine();
 
-                if (str.equalsIgnoreCase("q")) {
-                    System.out.println("good buy!");
-                    break;
-                }
-                if (str.equalsIgnoreCase("2")) {
-
-                    AccountView accountView = new AccountView();
-                    List<AccountDto> ac = accountView.ShowAccount(p);
-                    for (AccountDto a : ac) {
-                        System.out.println("PersonID: " + a.getPersonId());
-                        System.out.println("Description: " + a.getDescription());
+                    if (str.equalsIgnoreCase("q")) {
+                        System.out.println("good buy!");
+                        break;
                     }
 
-                    //CategorieDto categorieDto = new CategorieDto();
-                    //Categorie categorie = categorieDto.createCategorie();
-                    //CurrencyDto currencyDto = new CurrencyDto();
-                    //Currency currency = currencyDto.createCurrency();
+                        if (str.equalsIgnoreCase("1")) {
+                            AccountDto accountDto = talking.newAccount(userDto);
+
+                        }
+                }
 
 
                 }
+
+                if (str.equalsIgnoreCase("4"))  {
+
+                   // List<AccountDto> list = new Talking().showPersonAccount(userDto);
+                    //System.out.println("list = " + list.toString());
+
+                }
+
             }
         }
     }
-}
+
 
 
 

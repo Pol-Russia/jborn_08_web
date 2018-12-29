@@ -9,27 +9,16 @@ import java.util.List;
 
 public class UserConverter  {
 
-    private String toMD5(String start) {
-        return DigestUtils.md5Hex(start);
-    }
-
-
     public Person userDtoToPersonConvert(UserDto userDto) {
         if (userDto != null) {
-            int id = userDto.getId();
 
             Person person = new Person();
-            person.setMail(userDto.getMail());
 
-            if (id == -11) {
-                person.setPassword(toMD5(userDto.getPassword()));
-            }
-            else {
-                person.setPassword(userDto.getPassword());
-            }
+            person.setMail(userDto.getMail());
+            person.setPassword(userDto.getPassword());
             person.setFullName(userDto.getFullName());
             person.setNick(userDto.getNick());
-            person.setId(id);
+            person.setId(userDto.getId());
 
             return person;
         }

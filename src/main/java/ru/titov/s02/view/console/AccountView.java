@@ -57,11 +57,12 @@ public class AccountView {
                             //Вывести список имеющихся валют
                             // Либо создать свою валюту
                             List<CurrencyDto> list = new CurrencyView().findAllCurrencyDto();
-                            int count = 1;
+                            int count = 0;
                             if (list == null) {
                                 //Создаю валюту
                             }
                             for (CurrencyDto currency : list) {
+                                count++;
                                 System.out.println("please press " + count + " for choose " + currency.getNameCurrency());
                             }
                             System.out.println("please press 0 for create new currency ");
@@ -73,12 +74,11 @@ public class AccountView {
                                 return null;
                             }
                             else {
-                                int number = Integer.parseInt(value);
-                                if (number == 0) {
+                                if (value.equals("0")) {
                                     //Создать новую Валюту!
 
                                     CurrencyView currencyView = new CurrencyView();
-                                    CurrencyDto currencyDto = new CurrencyView().createCurrencyDto();
+                                    CurrencyDto currencyDto = currencyView.createCurrencyDto();
                                     CurrencyDto currency = currencyView.createNewCurrency(currencyDto);
 
                                     if (currency != null) {
@@ -86,10 +86,7 @@ public class AccountView {
                                         return accountDto;
                                     }
                                 }
-                                else {
-                                    accountDto.setCurrencyId(list.get(number - 1).getId());
-                                    return accountDto;
-                                }
+
                             }
                         }
                         else {

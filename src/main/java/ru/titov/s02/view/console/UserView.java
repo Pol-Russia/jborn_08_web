@@ -1,5 +1,6 @@
 package ru.titov.s02.view.console;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import ru.titov.s02.service.PersonService;
 import ru.titov.s02.service.dto.UserDto;
 
@@ -10,6 +11,10 @@ import java.util.regex.Pattern;
 public class UserView {
 
     Scanner scanner = new Scanner(System.in);
+
+    private String toMD5(String start) {
+        return DigestUtils.md5Hex(start);
+    }
 
 
     public UserDto createNewPerson(UserDto userDto) {
@@ -45,7 +50,7 @@ public class UserView {
                 while (true) {
                     if (validatePassword(password)) {
                         System.out.println("Please print your Nick name and press <Enter>");
-                        userDto.setPassword(password);
+                        userDto.setPassword(toMD5(password));
                         String nick = scanner.nextLine().trim();
 
                         while (true) {
@@ -152,8 +157,9 @@ public class UserView {
 
         if (userDto != null) {
 
-            if (new PersonService().checkPassword(userDto)) {
-                System.out.println("Successfully!");
+            userDto = new PersonService().checkPassword(userDto);
+            if (userDto != null) {
+                System.out.println("Successfully! ");
                 return userDto;
             }
         }
@@ -171,7 +177,7 @@ public class UserView {
             if (validatePassword(password)) {
                 UserDto user = new UserDto();
                 user.setMail(mail);
-                user.setPassword(password);
+                user.setPassword(toMD5(password));
                 return user;
             }
             else {
