@@ -14,7 +14,7 @@ public class CurrencyConverter {
 
             Currency currency = new Currency();
             currency.setId(currencyDto.getId());
-            currency.setNameOfCurrency(currency.getNameOfCurrency());
+            currency.setNameOfCurrency(currencyDto.getNameCurrency());
 
             return currency;
         }

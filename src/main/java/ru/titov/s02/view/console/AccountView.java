@@ -37,6 +37,12 @@ public class AccountView {
 
 
         public AccountDto createAccountDto(UserDto userDto) {
+
+            if (userDto == null) {
+                System.out.println("Невозможно создать счёт для неизвестного пользователя!");
+                return null;
+            }
+
             System.out.println("Please print your number account and press <Enter>");
             int numberAccount = scanner.nextInt();
             AccountDto accountDto = new AccountDto();
@@ -46,9 +52,11 @@ public class AccountView {
 
             while (true) {
                 if (validateNumberAccount(numberAccount)) {
+                    Scanner scanner = new Scanner(System.in);
                     System.out.println("Please print your account description and press <Enter>");
-                    accountDto.setNumberAccount(numberAccount);
                     String description = scanner.nextLine().trim();
+                    accountDto.setNumberAccount(numberAccount);
+
 
                     while (true) {
                         if (validateDescription(description)) {
@@ -60,6 +68,14 @@ public class AccountView {
                             int count = 0;
                             if (list == null) {
                                 //Создаю валюту
+                                CurrencyView currencyView = new CurrencyView();
+                                CurrencyDto currencyDto = currencyView.createCurrencyDto();
+                                CurrencyDto currency = currencyView.createNewCurrency(currencyDto);
+
+                                if (currency != null) {
+                                    accountDto.setCurrencyId(currency.getId());
+                                    return accountDto;
+                                }
                             }
                             for (CurrencyDto currency : list) {
                                 count++;
@@ -73,8 +89,7 @@ public class AccountView {
                                 System.out.println("Вы выбрали завершение операции!");
                                 return null;
                             }
-                            else {
-                                if (value.equals("0")) {
+                            else if (value.equals("0")) {
                                     //Создать новую Валюту!
 
                                     CurrencyView currencyView = new CurrencyView();
@@ -86,7 +101,10 @@ public class AccountView {
                                         return accountDto;
                                     }
                                 }
-
+                            else {
+                                int n = Integer.parseInt(value);
+                                accountDto.setCurrencyId(list.get(n - 1).getId());
+                                return accountDto;
                             }
                         }
                         else {

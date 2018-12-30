@@ -16,7 +16,9 @@ public class CurrencyService {
         if (currencyDto != null && ! currencyDto.getNameCurrency().isEmpty() && (checkNameOfCurrency(currencyDto))) {//Если валюта
             //уже существует она не будет создана повторно
 
-            Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
+            CurrencyConverter currencyConverter = new CurrencyConverter();
+            Currency currency = currencyConverter.currencyDtoToCurrencyConvert(currencyDto);
+
 
             currency = currencyDao.insert(currency);
 

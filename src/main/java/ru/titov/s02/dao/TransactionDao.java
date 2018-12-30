@@ -34,7 +34,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From transaction" +
-                     "WHERE (transaction.id = ?")) {
+                     "WHERE (transaction.id = ?)")) {
 
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
