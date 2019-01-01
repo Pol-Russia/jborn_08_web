@@ -16,7 +16,7 @@ public class AccountDao implements Dao<Account, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From account " +
-                     "WHERE (account.id = ?")) {
+                     "WHERE (account.id = ?)")) {
 
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
@@ -124,7 +124,7 @@ public class AccountDao implements Dao<Account, Integer> {
     public boolean delete(Integer id) {
 
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM account WHERE (account.id = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM account WHERE (account.id = ?)")) {
 
 
             preparedStatement.setInt(1, id);
@@ -146,7 +146,7 @@ public class AccountDao implements Dao<Account, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From account " +
-                     "WHERE (account.number_account = ?")) {
+                     "WHERE (account.number_account = ?)")) {
 
             preparedStatement.setInt(1, numberAccount);
             ResultSet rs = preparedStatement.executeQuery();
@@ -167,7 +167,7 @@ public class AccountDao implements Dao<Account, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From account " +
-                     "WHERE (account.person_id = ?")) {
+                     "WHERE (account.person_id = ?)")) {
 
 
             preparedStatement.setInt(1, personId);

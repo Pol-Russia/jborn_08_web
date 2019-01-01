@@ -24,7 +24,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
-                     "WHERE (currency.id = ?")) {
+                     "WHERE (currency.id = ?)")) {
 
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
@@ -103,7 +103,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     @Override
     public boolean delete(Integer id) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM currency WHERE (currency.id = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM currency WHERE (currency.id = ?)")) {
 
             preparedStatement.setInt(1, id);
 
@@ -121,7 +121,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
-                     "WHERE (currency.name_of_currency = ?")) {
+                     "WHERE (currency.name_of_currency = ?)")) {
 
             preparedStatement.setString(1, currency.getNameOfCurrency());
             ResultSet rs = preparedStatement.executeQuery();

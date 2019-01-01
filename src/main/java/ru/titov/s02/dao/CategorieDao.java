@@ -15,7 +15,7 @@ public class CategorieDao implements Dao<Categorie, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From categorie " +
-                     "WHERE (categorie.description = ?")) {
+                     "WHERE (categorie.description = ?)")) {
 
             preparedStatement.setString(1, categorie.getDescription());
             ResultSet rs = preparedStatement.executeQuery();
@@ -37,7 +37,7 @@ public class CategorieDao implements Dao<Categorie, Integer> {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("Select * From categorie " +
-                     "WHERE (categorie.id = ?")) {
+                     "WHERE (categorie.id = ?)")) {
 
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
@@ -132,7 +132,7 @@ public class CategorieDao implements Dao<Categorie, Integer> {
     @Override
     public boolean delete(Integer id) {
         try (Connection connection = getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM categorie WHERE (categorie.id = ?" )) {
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM categorie WHERE (categorie.id = ?)" )) {
 
             preparedStatement.setInt(1, id);
 
