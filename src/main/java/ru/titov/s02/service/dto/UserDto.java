@@ -1,11 +1,17 @@
 package ru.titov.s02.service.dto;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class UserDto {
     private int id = -11;
     private String mail;
     private String password;
     private String nick;
     private String fullName;
+
+    private String toMD5(String start) {
+        return DigestUtils.md5Hex(start);
+    }
 
 
     public int getId() {
@@ -30,7 +36,7 @@ public class UserDto {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = toMD5(password);
     }
 
     public String getNick() {

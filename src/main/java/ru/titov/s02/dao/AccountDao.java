@@ -163,6 +163,7 @@ public class AccountDao implements Dao<Account, Integer> {
     }
 
     public List<Account> findByPersonId(Integer personId) {
+
         List<Account> list = new ArrayList<>();
 
         try (Connection connection = getConnection();

@@ -9,10 +9,6 @@ import java.util.List;
 
 public class UserConverter  {
 
-    private String toMD5(String start) {
-        return DigestUtils.md5Hex(start);
-    }
-
 
     public Person userDtoToPersonConvert(UserDto userDto) {
         if (userDto != null) {
@@ -20,13 +16,7 @@ public class UserConverter  {
 
             Person person = new Person();
             person.setMail(userDto.getMail());
-
-            if (id == -11) {
-                person.setPassword(toMD5(userDto.getPassword()));
-            }
-            else {
-                person.setPassword(userDto.getPassword());
-            }
+            person.setPassword(userDto.getPassword());
             person.setFullName(userDto.getFullName());
             person.setNick(userDto.getNick());
             person.setId(id);

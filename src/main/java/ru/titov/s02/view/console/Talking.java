@@ -4,6 +4,7 @@ import ru.titov.s02.dao.domain.Account;
 import ru.titov.s02.dao.domain.Categorie;
 import ru.titov.s02.dao.domain.Currency;
 import ru.titov.s02.dao.domain.Transaction;
+import ru.titov.s02.service.converters.UserConverter;
 import ru.titov.s02.service.dto.*;
 
 import java.util.List;
@@ -119,16 +120,20 @@ public class Talking {
                 UserView userView = new UserView();
                 UserDto userDto = userView.createUserDto();
 
+
+
                 if (userDto != null) {
                     person = userView.createNewPerson(userDto);
                 }
 
                 if (person != null) {
-
+                    Scanner scanner1 = new Scanner(System.in);
                     System.out.println("Please press \"1\", if you wish create new account");
                     System.out.println("Please press \"2\" if you wish сreate new description your account");
                     System.out.println("Please press \"3\" for your account");
                     System.out.println("for exit press \"q\" or \"Q\"");
+
+                    str = scanner1.nextLine().trim();
 
                     if (str.equalsIgnoreCase("q")) {
                         System.out.println("good buy!");
@@ -138,8 +143,10 @@ public class Talking {
 
 
                     }
-                    else if (str.equalsIgnoreCase("1")) {
 
+                    if (str.equalsIgnoreCase("1")) {
+
+                        System.out.println("ВЫБР");
                         AccountView accountView = new AccountView();
                         AccountDto accountDto = accountView.createAccountDto(userDto);
 
@@ -156,9 +163,9 @@ public class Talking {
             }
             if (str.equalsIgnoreCase("2")) {
 
-                UserDto p = new UserView().isExistUser();
-                if (person != null) {
+                UserDto userDto = new UserView().isExistUser();
 
+                if (userDto != null) {
                     System.out.println("Проверка прошла успешно!");
                 }
 
@@ -173,10 +180,10 @@ public class Talking {
                     System.out.println("good buy!");
                     break;
                 }
-                if (str.equalsIgnoreCase("2")) {
+                if (str.equalsIgnoreCase("1")) {
 
                     AccountView accountView = new AccountView();
-                    List<AccountDto> ac = accountView.ShowAccount(p);
+                    List<AccountDto> ac = accountView.ShowAccount(userDto);
                     for (AccountDto a : ac) {
                         System.out.println("PersonID: " + a.getPersonId());
                         System.out.println("Description: " + a.getDescription());
