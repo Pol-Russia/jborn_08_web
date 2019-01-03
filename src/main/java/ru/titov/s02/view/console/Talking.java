@@ -127,13 +127,12 @@ public class Talking {
                 }
 
                 if (person != null) {
-                    Scanner scanner1 = new Scanner(System.in);
+
                     System.out.println("Please press \"1\", if you wish create new account");
                     System.out.println("Please press \"2\" if you wish сreate new description your account");
                     System.out.println("Please press \"3\" for your account");
                     System.out.println("for exit press \"q\" or \"Q\"");
 
-                    str = scanner1.nextLine().trim();
 
                     if (str.equalsIgnoreCase("q")) {
                         System.out.println("good buy!");
@@ -146,7 +145,6 @@ public class Talking {
 
                     if (str.equalsIgnoreCase("1")) {
 
-                        System.out.println("ВЫБР");
                         AccountView accountView = new AccountView();
                         AccountDto accountDto = accountView.createAccountDto(userDto);
 
@@ -167,6 +165,7 @@ public class Talking {
 
                 if (userDto != null) {
                     System.out.println("Проверка прошла успешно!");
+
                 }
 
                 System.out.println("Please press \"1\", if you wish create new account");
@@ -174,7 +173,7 @@ public class Talking {
                 System.out.println("Please press \"3\" for your account");
                 System.out.println("for exit press \"q\" or \"Q\"");
 
-                str = scanner.nextLine();
+                str = scanner.nextLine().trim();
 
                 if (str.equalsIgnoreCase("q")) {
                     System.out.println("good buy!");
@@ -185,9 +184,10 @@ public class Talking {
                     AccountView accountView = new AccountView();
                     List<AccountDto> ac = accountView.ShowAccount(userDto);
                     for (AccountDto a : ac) {
-                        System.out.println("PersonID: " + a.getPersonId());
-                        System.out.println("Description: " + a.getDescription());
+                        System.out.println(a.toString());
                     }
+
+
 
                     //CategorieDto categorieDto = new CategorieDto();
                     //Categorie categorie = categorieDto.createCategorie();

@@ -1,6 +1,7 @@
 package ru.titov.s02.view.console;
 
 import ru.titov.s02.service.PersonService;
+import ru.titov.s02.service.converters.UserConverter;
 import ru.titov.s02.service.dto.UserDto;
 
 import java.util.Scanner;
@@ -152,11 +153,9 @@ public class UserView {
 
         if (userDto != null) {
 
-            if (new PersonService().checkPassword(userDto)) {
-                System.out.println("Successfully!");
-                return userDto;
-            }
+            return new PersonService().checkPassword(userDto);
         }
+
         return null;
     }
 

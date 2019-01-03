@@ -38,7 +38,7 @@ public class PersonService {
         return false;
     }
 
-    public boolean checkPassword(UserDto personDto) {
+    public UserDto checkPassword(UserDto personDto) {
 
         Person person = new UserConverter().userDtoToPersonConvert(personDto);
         person = personDao.findByMail(person.getMail());
@@ -46,12 +46,18 @@ public class PersonService {
         if (person != null) {
 
                 if (person.getPassword().equals(personDto.getPassword())) {
-                    return true;
+                    personDto = new UserConverter().personToUserDtoConvert(person);
+                    return personDto;
                 }
             }
 
 
-        return false;
+        return null;
+    }
+
+    public UserDto findById(int id) {
+
+        return new UserConverter().personToUserDtoConvert(personDao.findById(id));
     }
 
     public UserDto findNickNameAndPassword(UserDto personDto) {

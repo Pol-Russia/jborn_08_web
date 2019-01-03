@@ -66,4 +66,8 @@ public class CurrencyService {
 
         return currencyDao.delete(currencyDto.getId());
     }
+    public Currency findById(int id) {
+
+        return currencyDao.findById(id);
+    }
 }

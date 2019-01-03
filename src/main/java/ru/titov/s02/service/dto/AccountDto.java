@@ -1,6 +1,9 @@
 package ru.titov.s02.service.dto;
 
 
+import ru.titov.s02.service.CurrencyService;
+import ru.titov.s02.service.PersonService;
+
 import java.math.BigDecimal;
 
 
@@ -58,5 +61,11 @@ public class AccountDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "User - " + new PersonService().findById(getPersonId()).toString() + "; " + "Number account = " + getNumberAccount() + ";" + " Balance = " + getBalance() + "; "
+                + "Currency - " + new CurrencyService().findById(getCurrencyId()).getNameOfCurrency() + "; " + "Description: " + getDescription();
     }
 }
