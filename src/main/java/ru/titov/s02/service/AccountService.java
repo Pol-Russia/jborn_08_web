@@ -24,7 +24,7 @@ public class AccountService {
 
          Account account = new AccountConverter().accountDtoToAccountConvert(accountDto);
 
-        if (accountDao.findByPersonId(account.getPersonID()).size() < 5 && checkPersonId(accountDto) && checkCurrencyId(accountDto)
+        if (accountDao.findByPersonId(account.getPersonID()).size() < 5 && checkCurrencyId(accountDto)
                 && checkNumberAccount(accountDto)) { // Не более 5 счетов в одни руки!
 
             return new AccountConverter().accountToAccountDtoConvert(accountDao.insert(account));

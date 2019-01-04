@@ -92,6 +92,12 @@ public class CategorieDao implements Dao<Categorie, Integer> {
 
             preparedStatement.setString(1, categorie.getDescription());
             preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+
+            if (rs.next()) {
+                int id = rs.getInt(1); //вставленный ключ
+                categorie.setId(id);
+            }
 
             return categorie;
 
@@ -111,22 +117,14 @@ public class CategorieDao implements Dao<Categorie, Integer> {
             preparedStatement.setInt(2, categorie.getId());
             preparedStatement.setString(1, categorie.getDescription());
 
-            if (preparedStatement.executeUpdate() > 0) {
-
-                ResultSet rs = preparedStatement.getGeneratedKeys();
-
-                if (rs.next()) {
-                    int id = rs.getInt(1); //вставленный ключ
-                    categorie.setId(id);
-                }
+            preparedStatement.executeUpdate();
 
                 return categorie;
-            }
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override

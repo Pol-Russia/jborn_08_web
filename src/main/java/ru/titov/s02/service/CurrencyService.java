@@ -16,7 +16,10 @@ public class CurrencyService {
         if (currencyDto != null && ! currencyDto.getNameCurrency().isEmpty() && (checkNameOfCurrency(currencyDto))) {//Если валюта
             //уже существует она не будет создана повторно
 
-            Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
+            CurrencyConverter currencyConverter = new CurrencyConverter();
+            Currency currency = currencyConverter.currencyDtoToCurrencyConvert(currencyDto);
+
+
             currency = currencyDao.insert(currency);
 
             if (currency != null) {
@@ -37,11 +40,11 @@ public class CurrencyService {
         Currency currency = new CurrencyConverter().currencyDtoToCurrencyConvert(currencyDto);
         currency = currencyDao.findByNameCurrency(currency);
 
-        if (currency != null) {
-            return false;
+        if (currency == null) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 

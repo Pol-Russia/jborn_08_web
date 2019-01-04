@@ -178,12 +178,11 @@ public class AccountDao implements Dao<Account, Integer> {
                 Account account = new Account();
                 list.add(getAccount(rs, account));
             }
+            return list;
         }
         catch (SQLException exept) {
             throw new RuntimeException(exept);
         }
-
-        return list;
     }
 
 }
