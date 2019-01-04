@@ -168,9 +168,9 @@ public class Talking {
 
                 }
 
-                System.out.println("Please press \"1\", if you wish create new account");
+                System.out.println("Please press \"1\", for view all your accounts ");
                 System.out.println("Please press \"2\" if you wish сreate new description your account");
-                System.out.println("Please press \"3\" for your account");
+                System.out.println("Please press \"3\" if you wish create new account");
                 System.out.println("for exit press \"q\" or \"Q\"");
 
                 str = scanner.nextLine().trim();
@@ -186,6 +186,16 @@ public class Talking {
                     for (AccountDto a : ac) {
                         System.out.println(a.toString());
                     }
+                }
+
+                if (str.equalsIgnoreCase("3")) {
+                    AccountView accountView = new AccountView();
+                    AccountDto accountDto = accountView.createAccountDto(userDto);
+
+                    if (accountDto != null) {
+                        AccountDto account = accountView.createNewAccount(accountDto);
+                    }
+                }
 
 
 
@@ -199,7 +209,7 @@ public class Talking {
             }
         }
     }
-}
+
 
 
 

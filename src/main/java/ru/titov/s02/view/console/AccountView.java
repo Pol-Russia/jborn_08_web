@@ -22,6 +22,20 @@ public class AccountView {
         private Scanner scanner = new Scanner(System.in);
 
 
+        public AccountDto newCurrency(AccountDto accountDto) {
+
+            CurrencyView currencyView = new CurrencyView();
+            CurrencyDto currencyDto = new CurrencyView().createCurrencyDto();
+            CurrencyDto currency = currencyView.createNewCurrency(currencyDto);
+
+            if (currency != null) {
+                accountDto.setCurrencyId(currency.getId());
+                return accountDto;
+            }
+            return null;
+        }
+
+
         public AccountDto createNewAccount(AccountDto accountDto) {
 
 
@@ -43,9 +57,10 @@ public class AccountView {
             accountDto.setPersonId(userDto.getId());
             accountDto.setBalance(BigDecimal.valueOf(0));
             accountDto.setId(-11);
+            accountDto.setNumberAccount(numberAccount);
 
             while (true) {
-                if (validateNumberAccount(numberAccount)) {
+                if (validateNumberAccount(accountDto)) {
                     System.out.println("Please print your account description and press <Enter>");
                     accountDto.setNumberAccount(numberAccount);
                     String description = scanner.nextLine().trim();
@@ -60,9 +75,11 @@ public class AccountView {
                             int count = 1;
                             if (list == null) {
                                 //Создаю валюту
+                                return newCurrency(accountDto);
                             }
                             for (CurrencyDto currency : list) {
                                 System.out.println("please press " + count + " for choose " + currency.getNameCurrency());
+                                count++;
                             }
                             System.out.println("please press 0 for create new currency ");
                             System.out.println("for exit press q or Q");
@@ -76,15 +93,7 @@ public class AccountView {
                                 int number = Integer.parseInt(value);
                                 if (number == 0) {
                                     //Создать новую Валюту!
-
-                                    CurrencyView currencyView = new CurrencyView();
-                                    CurrencyDto currencyDto = new CurrencyView().createCurrencyDto();
-                                    CurrencyDto currency = currencyView.createNewCurrency(currencyDto);
-
-                                    if (currency != null) {
-                                        accountDto.setCurrencyId(currency.getId());
-                                        return accountDto;
-                                    }
+                                    return newCurrency(accountDto);
                                 }
                                 else {
                                     accountDto.setCurrencyId(list.get(number - 1).getId());
@@ -107,6 +116,7 @@ public class AccountView {
                     System.out.println("Our number account is not valid. Please try again");
                     System.out.println("for exit press 0");
                     numberAccount = scanner.nextInt();
+                    accountDto.setNumberAccount(numberAccount);
 
                     if (numberAccount == 0) {
                         return null;
@@ -115,15 +125,28 @@ public class AccountView {
             }
         }
 
-        private boolean validateNumberAccount(int numberAccount) {
-        if (String.valueOf(numberAccount).length() == 8) { //Номер счета 8 цифр всегда, можно заморочиться и проверить
+        private boolean validateNumberAccount(AccountDto accountDto) {
+
+            if (String.valueOf(accountDto.getNumberAccount()).length() == 8) { //Номер счета 8 цифр всегда, можно заморочиться и проверить
             // префикс или сделать 12 и т д
 
-            return true;
+
+                if (new AccountService().checkNumberAccount(accountDto)) {
+                    return true;
+
+                }
+                else {
+
+                    System.out.println("This is number account " + accountDto.getNumberAccount() + " already exist! ");
+                    return false;
+
+                }
+            }
+
+            System.out.println("Number account must contain from 8 numbers!");
+            return false;
         }
-        System.out.println("Number account must contain from 8 numbers!");
-        return false;
-    }
+
 
 
         private boolean validateDescription(String description) {

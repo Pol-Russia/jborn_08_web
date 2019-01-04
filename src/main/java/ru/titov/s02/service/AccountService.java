@@ -43,9 +43,9 @@ public class AccountService {
         return new AccountConverter().listAccountToListAccountDtoConvert(accountDao.findByPersonId(personDto.getId()));
     }
 
-    private boolean checkNumberAccount(AccountDto accountDto) {
+    public boolean checkNumberAccount(AccountDto accountDto) {
 
-        if (accountDao.findByNumberAccount(accountDto.getNumberAccount()) != null) {
+        if (accountDao.findByNumberAccount(accountDto.getNumberAccount()).isEmpty()) {
 
             return true;
         }
@@ -54,7 +54,7 @@ public class AccountService {
     }
 
     private boolean checkPersonId(AccountDto accountDto) {
-        PersonDao personDao = null;
+        PersonDao personDao = new PersonDao();
 
         if (personDao.findById(accountDto.getPersonId()) != null) {
             return true;
@@ -63,7 +63,7 @@ public class AccountService {
     }
 
     private boolean checkCurrencyId(AccountDto accountDto) {
-        CurrencyDao currencyDao = null;
+        CurrencyDao currencyDao = new CurrencyDao();
 
         if (currencyDao.findById(accountDto.getCurrencyId()) != null) { //Существует
             return true;
