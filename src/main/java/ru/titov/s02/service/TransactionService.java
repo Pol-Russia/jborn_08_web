@@ -76,6 +76,12 @@ public class TransactionService {
         return  new TransactionConverter().listTransactionToListTransactionDtoConvert(transactionDao.findByAccountId(accountDto.getId()));
     }
 
+    public Transaction transfer(AccountDto accountDto1, AccountDto accountDto2) {
+
+        //transactionDao.
+
+        return null;
+    }
 
 }
 

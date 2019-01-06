@@ -1,8 +1,13 @@
 package ru.titov.s02.dao;
 
+import ru.titov.s02.dao.domain.Account;
+import ru.titov.s02.dao.domain.Categorie;
 import ru.titov.s02.dao.domain.Transaction;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +20,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
         transaction.setId(rs.getInt(1));
         transaction.setAccountID(rs.getInt(2));
         transaction.setSum(rs.getBigDecimal(3));
-        transaction.setDate(rs.getDate(4));
+        transaction.setDate(rs.getString(4));
         transaction.setCategorieID(rs.getInt(5));
 
         return transaction;
@@ -24,7 +29,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     private void setTransaction(PreparedStatement preparedStatement, Transaction transaction) throws SQLException {
         preparedStatement.setInt(1, transaction.getAccountID());
         preparedStatement.setBigDecimal(2, transaction.getSum());
-        preparedStatement.setDate(3, (Date) transaction.getDate());
+        preparedStatement.setString(3, transaction.getDate());
         preparedStatement.setInt(4, transaction.getCategorieID());
     }
 
@@ -221,5 +226,66 @@ public class TransactionDao implements Dao<Transaction, Integer> {
         }
 
         return list;
+    }
+
+    public Transaction transfer(Account account1, Account account2, BigDecimal sum, Categorie categorie) throws SQLException {
+
+
+           Connection connection = getConnection();
+
+        try {
+           connection.setAutoCommit(false);
+
+           if (account1.getBalance().compareTo(sum) >= 0) {
+
+               //вычесть средства со счета
+               account1.setBalance(account1.getBalance().divide(sum));
+
+               //положить
+               account2.setBalance(account2.getBalance().add(sum));
+
+               //внести изменения на счета
+               AccountDao accountDao = new AccountDao();
+               accountDao.update(account1);
+               accountDao.update(account2);
+
+               //Закончить транзакцию успешно
+
+               Transaction transaction = new Transaction();
+               transaction.setAccountID(account1.getId());
+               BigDecimal number = BigDecimal.valueOf(0);
+               transaction.setSum(number.divide(sum));
+               transaction.setCategorieID(categorie.getId());
+               transaction.setDate(now());
+               TransactionDao transactionDao = new TransactionDao();
+               transactionDao.insert(transaction);
+
+               Transaction transaction2 = transaction;
+               transaction2.setSum(sum);
+               transactionDao.insert(transaction2);
+
+               connection.commit();
+           }
+           else {
+               connection.rollback();
+               return null;
+           }
+
+       }
+
+       catch (SQLException sql) {
+           connection.rollback();
+           return null;
+       }
+
+       finally {
+                 connection.setAutoCommit(true);
+       }
+        return null;
+    }
+
+    public String now() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+        return dateFormat.format(new java.util.Date());
     }
 }

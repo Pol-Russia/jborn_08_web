@@ -7,7 +7,7 @@ public class Transaction {
     private int id;
     private int accountID;
     private BigDecimal sum;
-    private Date date;
+    private String date;
     private int categorieID;
 
 
@@ -36,11 +36,11 @@ public class Transaction {
         this.sum = sum;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
