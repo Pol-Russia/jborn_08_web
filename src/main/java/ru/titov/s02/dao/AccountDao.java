@@ -185,4 +185,27 @@ public class AccountDao implements Dao<Account, Integer> {
         }
     }
 
+    public int checkByPersonId(Integer personId) {
+
+        int count = 0;
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("Select * From account " +
+                     "WHERE (account.person_id = ?)")) {
+
+
+            preparedStatement.setInt(1, personId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                count++;
+            }
+            return count;
+        }
+        catch (SQLException exept) {
+            throw new RuntimeException(exept);
+        }
+
+    }
+
 }

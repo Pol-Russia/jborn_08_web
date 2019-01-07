@@ -7,6 +7,7 @@ import java.sql.*;
 
 public class DaoFactory {
     private static DataSource dataSource;
+    public static final int maxCountAccount = 5;
 
     public static DataSource getDataSource() {
         if (dataSource == null) {

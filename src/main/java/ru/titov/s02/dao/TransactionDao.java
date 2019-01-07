@@ -228,7 +228,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
         return list;
     }
 
-    public Transaction transfer(Account account1, Account account2, BigDecimal sum, Categorie categorie) throws SQLException {
+    public boolean transfer(Account account1, Account account2, BigDecimal sum, Categorie categorie) throws SQLException {
 
 
            Connection connection = getConnection();
@@ -265,27 +265,156 @@ public class TransactionDao implements Dao<Transaction, Integer> {
                transactionDao.insert(transaction2);
 
                connection.commit();
+               return true;
            }
            else {
                connection.rollback();
-               return null;
+               return false;
            }
 
        }
 
        catch (SQLException sql) {
            connection.rollback();
-           return null;
+           return false;
        }
 
        finally {
                  connection.setAutoCommit(true);
        }
-        return null;
     }
 
-    public String now() {
+    public boolean deleteTransfer(Account account1, Account account2, BigDecimal sum, Categorie categorie) throws SQLException {
+
+        Connection connection = getConnection();
+
+        try {
+            connection.setAutoCommit(false);
+
+
+                account1.setBalance(account1.getBalance().add(sum));
+                account2.setBalance(account2.getBalance().divide(sum));
+
+                //внести изменения на счета
+                AccountDao accountDao = new AccountDao();
+                accountDao.update(account1);
+                accountDao.update(account2);
+
+                //Закончить транзакцию успешно
+
+                Transaction transaction = createTransaction(account1, categorie);
+                transaction.setSum(sum);
+                TransactionDao transactionDao = new TransactionDao();
+                transactionDao.insert(transaction);
+
+                Transaction transaction2 = transaction;
+                transaction2.setSum(sum.multiply(BigDecimal.valueOf(-1)));
+                transaction2.setSum(sum);
+                transactionDao.insert(transaction2);
+
+                connection.commit();
+                return true;
+        }
+
+        catch (SQLException sql) {
+            connection.rollback();
+        }
+
+        finally {
+            connection.setAutoCommit(true);
+        }
+        return false;
+    }
+
+    public Transaction addSum(Account account, BigDecimal sum,  Categorie categorie) throws SQLException {
+        Connection connection = getConnection();
+
+        try {
+            connection.setAutoCommit(false);
+
+                //положить
+                account.setBalance(account.getBalance().add(sum));
+
+                //внести изменения на счета
+                AccountDao accountDao = new AccountDao();
+                accountDao.update(account);
+
+
+                //Закончить транзакцию успешно
+
+            Transaction transaction = createTransaction(account, categorie);
+            transaction.setSum(sum);
+
+            TransactionDao transactionDao = new TransactionDao();
+            transactionDao.insert(transaction);
+
+                connection.commit();
+                return transaction;
+            }
+            catch (SQLException exp){
+                connection.rollback();
+                throw new RuntimeException(exp);
+
+            }
+
+         finally {
+
+            connection.setAutoCommit(true);
+        }
+    }
+
+    public Transaction divideSum(Account account, BigDecimal sum,  Categorie categorie) throws SQLException {
+        Connection connection = getConnection();
+
+        try {
+            connection.setAutoCommit(false);
+
+            //положить
+            account.setBalance(account.getBalance().divide(sum));
+
+            //внести изменения на счета
+            AccountDao accountDao = new AccountDao();
+            accountDao.update(account);
+
+
+            //Закончить транзакцию успешно
+            Transaction transaction = createTransaction(account, categorie);
+            transaction.setSum(sum.multiply(BigDecimal.valueOf(-1)));
+
+            TransactionDao transactionDao = new TransactionDao();
+            transactionDao.insert(transaction);
+
+            connection.commit();
+            return transaction;
+        }
+        catch (SQLException exp){
+            connection.rollback();
+            throw new RuntimeException(exp);
+
+        }
+
+        finally {
+
+            connection.setAutoCommit(true);
+        }
+
+    }
+
+    private String now() {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
         return dateFormat.format(new java.util.Date());
+    }
+
+    private Transaction createTransaction(Account account, Categorie categorie) {
+
+        Transaction transaction = new Transaction();
+        transaction.setAccountID(account.getId());
+        transaction.setCategorieID(categorie.getId());
+        transaction.setDate(now());
+        TransactionDao transactionDao = new TransactionDao();
+        transactionDao.insert(transaction);
+
+        return transaction;
+
     }
 }

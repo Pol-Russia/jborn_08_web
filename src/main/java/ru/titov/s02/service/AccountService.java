@@ -2,6 +2,7 @@ package ru.titov.s02.service;
 
 import ru.titov.s02.dao.AccountDao;
 import ru.titov.s02.dao.CurrencyDao;
+import ru.titov.s02.dao.DaoFactory;
 import ru.titov.s02.dao.PersonDao;
 import ru.titov.s02.dao.domain.Account;
 import ru.titov.s02.service.converters.AccountConverter;
@@ -24,8 +25,7 @@ public class AccountService {
 
          Account account = new AccountConverter().accountDtoToAccountConvert(accountDto);
 
-        if (accountDao.findByPersonId(account.getPersonID()).size() < 5 && checkCurrencyId(accountDto)
-                && checkNumberAccount(accountDto)) { // Не более 5 счетов в одни руки!
+        if (accountDao.checkByPersonId(account.getPersonID()) < DaoFactory.maxCountAccount && checkCurrencyId(accountDto)) { // Не более maxCountAccount счетов в одни руки!
 
             return new AccountConverter().accountToAccountDtoConvert(accountDao.insert(account));
         }
