@@ -53,6 +53,21 @@ public class CurrencyView {
 
             return currencyDto;
         }
+        else {
+            System.out.println("Your name currency isnt validate!");
+            System.out.println("Please press \"1\" if you wish Try again");
+            System.out.println("for exit press \"q\" or \"Q\"");
+            String str = scanner.nextLine().trim();
+
+            if (str.equalsIgnoreCase("q")) {
+                System.out.println("You closed create new currency!");
+                return null;
+            }
+            else if (str.equalsIgnoreCase("1"))  {
+
+                    return createCurrencyDto();
+            }
+        }
 
         return null;
     }

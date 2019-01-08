@@ -7,13 +7,20 @@ import ru.titov.s02.dao.domain.Transaction;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
 
 import static ru.titov.s02.dao.DaoFactory.getConnection;
 
 public class TransactionDao implements Dao<Transaction, Integer> {
+
+    private Date parseNow(String date) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+        return (Date) dateFormat.parse(date);
+    }
 
     private  Transaction getTransaction(ResultSet rs, Transaction transaction) throws SQLException {
 
@@ -26,10 +33,11 @@ public class TransactionDao implements Dao<Transaction, Integer> {
         return transaction;
     }
 
-    private void setTransaction(PreparedStatement preparedStatement, Transaction transaction) throws SQLException {
+    private void setTransaction(PreparedStatement preparedStatement, Transaction transaction) throws SQLException, ParseException {
         preparedStatement.setInt(1, transaction.getAccountID());
         preparedStatement.setBigDecimal(2, transaction.getSum());
-        preparedStatement.setString(3, transaction.getDate());
+        //preparedStatement.setDate(3, parseNow(transaction.getDate()));
+        preparedStatement.setDate(3, new Date(System.currentTimeMillis()));
         preparedStatement.setInt(4, transaction.getCategorieID());
     }
 
@@ -79,12 +87,18 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     @Override
     public Transaction insert(Transaction transaction) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transaction(id," +
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transaction(" +
                      "account_id, sum, date, categorie_id) VALUES( ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);)
         {
 
             setTransaction(preparedStatement, transaction);
             preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+
+            if (rs.next()) {
+                int id = rs.getInt(1); //вставленный ключ
+                transaction.setId(id);
+            }
 
                 return transaction;
 
@@ -92,10 +106,13 @@ public class TransactionDao implements Dao<Transaction, Integer> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public Transaction update(Transaction transaction) {
+    public Transaction update(Transaction transaction) throws ParseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE transaction SET " +
                      "account_id = ?, sum = ?, date = ?, categorie_id = ? " +

@@ -21,4 +21,9 @@ public class CategorieDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Id = " + getId() + "; " + " description: " + getDescription() +"; ";
+    }
 }

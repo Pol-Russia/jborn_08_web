@@ -7,6 +7,7 @@ import ru.titov.s02.dao.PersonDao;
 import ru.titov.s02.dao.domain.Account;
 import ru.titov.s02.service.converters.AccountConverter;
 import ru.titov.s02.service.dto.AccountDto;
+import ru.titov.s02.service.dto.MaxCountAccountException;
 import ru.titov.s02.service.dto.UserDto;
 
 import java.math.BigDecimal;
@@ -17,20 +18,23 @@ public class AccountService {
 
     private final AccountDao accountDao = new AccountDao();
 
-    public AccountDto createNewAccount(AccountDto accountDto) {
+    public AccountDto createNewAccount(AccountDto accountDto) throws  MaxCountAccountException{
 
          if (accountDto == null) {
              return null;
          }
 
          Account account = new AccountConverter().accountDtoToAccountConvert(accountDto);
+         int count = accountDao.checkByPersonId(account.getPersonID());
 
-        if (accountDao.checkByPersonId(account.getPersonID()) < DaoFactory.maxCountAccount && checkCurrencyId(accountDto)) { // Не более maxCountAccount счетов в одни руки!
+        if (count < DaoFactory.maxCountAccount && checkCurrencyId(accountDto)) { // Не более maxCountAccount счетов в одни руки!
 
             return new AccountConverter().accountToAccountDtoConvert(accountDao.insert(account));
         }
-
-        return null;
+        else {
+            //Исключение
+            throw new MaxCountAccountException("Достигнуто предельное количество счетов " + DaoFactory.maxCountAccount +  " для " + new PersonService().findById(account.getPersonID()).toString() , count);
+        }
     }
 
     public List<AccountDto> downloadListAccount() {

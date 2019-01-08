@@ -8,6 +8,7 @@ import ru.titov.s02.service.converters.AccountConverter;
 import ru.titov.s02.service.converters.UserConverter;
 import ru.titov.s02.service.dto.AccountDto;
 import ru.titov.s02.service.dto.CurrencyDto;
+import ru.titov.s02.service.dto.MaxCountAccountException;
 import ru.titov.s02.service.dto.UserDto;
 
 
@@ -36,7 +37,7 @@ public class AccountView {
         }
 
 
-        public AccountDto createNewAccount(AccountDto accountDto) {
+        public AccountDto createNewAccount(AccountDto accountDto) throws MaxCountAccountException {
 
 
         if (new AccountService().createNewAccount(accountDto) != null) {

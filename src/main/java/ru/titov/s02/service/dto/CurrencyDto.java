@@ -21,4 +21,9 @@ public class CurrencyDto {
     public void setNameCurrency(String nameCurrency) {
         this.nameCurrency = nameCurrency;
     }
+
+    @Override
+    public String toString() {
+        return "Id = " + getId() + "; " + " name currency: " + getNameCurrency() +"; ";
+    }
 }

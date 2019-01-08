@@ -21,7 +21,9 @@ public class CategorieDao implements Dao<Categorie, Integer> {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                return getCategorie(rs, categorie);
+                categorie.setId(rs.getInt(1));
+                categorie.setDescription(rs.getString(2));
+                return categorie;
             }
         }
         catch (SQLException exept) {
@@ -87,7 +89,7 @@ public class CategorieDao implements Dao<Categorie, Integer> {
     public Categorie insert(Categorie categorie) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO categorie(" +
-                     "description) VALUES( ? )", Statement.RETURN_GENERATED_KEYS);)
+                     "description) VALUES( ? )", Statement.RETURN_GENERATED_KEYS))
         {
 
             preparedStatement.setString(1, categorie.getDescription());

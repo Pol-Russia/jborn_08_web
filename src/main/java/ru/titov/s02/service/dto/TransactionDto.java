@@ -7,7 +7,7 @@ public class TransactionDto {
     private int id = -11;
     private  int accountID;
     private BigDecimal sum;
-    private Date date;
+    private String date;
     private int categorieID;
 
 
@@ -36,11 +36,11 @@ public class TransactionDto {
         this.sum = sum;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -50,5 +50,10 @@ public class TransactionDto {
 
     public void setCategorieID(int categorieID) {
         this.categorieID = categorieID;
+    }
+
+    @Override
+    public String toString() {
+        return "Id = " + getId() + "; " + "Sum = " + getSum() + "; " + "Date: " + getDate() + "; " + "categorie - " + getCategorieID()  + "; ";
     }
 }

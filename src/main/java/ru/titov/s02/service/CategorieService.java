@@ -54,11 +54,10 @@ public class CategorieService {
         Categorie categorie = new CategorieConverter().categorieDtoToCategorieConvert(categorieDto);
         categorie = categorieDao.findByDescription(categorie);
 
-        if (categorie != null) {
-            return false;
+        if (categorie == null) {
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     public boolean deleteCategorie(CategorieDto categorie) {

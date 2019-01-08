@@ -8,8 +8,11 @@ import ru.titov.s02.service.converters.TransactionConverter;
 import ru.titov.s02.service.dto.AccountDto;
 import ru.titov.s02.service.dto.CategorieDto;
 import ru.titov.s02.service.dto.TransactionDto;
+import ru.titov.s02.service.dto.UserDto;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class TransactionService {
         return  transactionDto;
     }
 
-    public TransactionDto updateTransaction(TransactionDto transactionDto) {
+    public TransactionDto updateTransaction(TransactionDto transactionDto) throws ParseException {
 
         Transaction transaction = transactionDao.findById(transactionDto.getId());
 
@@ -71,9 +74,21 @@ public class TransactionService {
         return transactionDao.delete(transactionDto.getId());
     }
 
-    public List<TransactionDto> findTransactionByAccountId(AccountDto accountDto) {
+    public List<TransactionDto> findTransactionByAccountId(UserDto userDto) {
 
-        return  new TransactionConverter().listTransactionToListTransactionDtoConvert(transactionDao.findByAccountId(accountDto.getId()));
+        List<AccountDto> listAccountDto = new AccountService().findByPesonId(userDto);
+        if (listAccountDto.isEmpty()) {
+            return null;
+        }
+
+        TransactionConverter converter = new TransactionConverter();
+        List<TransactionDto> transaction = new ArrayList<>();
+
+        for (AccountDto dto : listAccountDto) {
+            transaction.addAll(converter.listTransactionToListTransactionDtoConvert(transactionDao.findByAccountId(dto.getId())));
+        }
+
+        return  transaction;
     }
 
     public Transaction transfer(AccountDto accountDto1, AccountDto accountDto2) {
