@@ -1,17 +1,17 @@
-package ru.titov.s04.view.console;
+package ru.titov.s06.view.console;
 
-import ru.titov.s04.dao.DaoFactory;
-import ru.titov.s04.dao.domain.Account;
-import ru.titov.s04.dao.domain.Currency;
-import ru.titov.s04.dao.domain.Person;
-import ru.titov.s04.service.AccountService;
-import ru.titov.s04.service.CurrencyService;
-import ru.titov.s04.service.ServiceFactory;
-import ru.titov.s04.service.converters.AccountConverter;
-import ru.titov.s04.service.converters.UserConverter;
-import ru.titov.s04.service.dto.AccountDto;
-import ru.titov.s04.service.dto.CurrencyDto;
-import ru.titov.s04.service.dto.UserDto;
+import ru.titov.s06.dao.DaoFactory;
+import ru.titov.s06.dao.domain.Account;
+import ru.titov.s06.dao.domain.Currency;
+import ru.titov.s06.dao.domain.Person;
+import ru.titov.s06.service.AccountService;
+import ru.titov.s06.service.CurrencyService;
+import ru.titov.s06.service.ServiceFactory;
+import ru.titov.s06.service.converters.AccountConverter;
+import ru.titov.s06.service.converters.UserConverter;
+import ru.titov.s06.service.dto.AccountDto;
+import ru.titov.s06.service.dto.CurrencyDto;
+import ru.titov.s06.service.dto.UserDto;
 
 
 import java.math.BigDecimal;

@@ -1,6 +1,6 @@
-package ru.titov.s04.dao.domain;
+package ru.titov.s06.dao.domain;
 
-import ru.titov.s04.dao.AccountDao;
+import ru.titov.s06.dao.AccountDao;
 
 import java.util.List;
 

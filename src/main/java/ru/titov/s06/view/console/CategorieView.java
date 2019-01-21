@@ -1,9 +1,9 @@
-package ru.titov.s04.view.console;
+package ru.titov.s06.view.console;
 
-import ru.titov.s04.service.CategorieService;
-import ru.titov.s04.service.SecurityService;
-import ru.titov.s04.service.ServiceFactory;
-import ru.titov.s04.service.dto.CategorieDto;
+import ru.titov.s06.service.CategorieService;
+import ru.titov.s06.service.SecurityService;
+import ru.titov.s06.service.ServiceFactory;
+import ru.titov.s06.service.dto.CategorieDto;
 
 import java.util.List;
 import java.util.Scanner;

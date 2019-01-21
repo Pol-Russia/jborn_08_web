@@ -1,4 +1,4 @@
-package ru.titov.s04.service.dto;
+package ru.titov.s06.service.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;

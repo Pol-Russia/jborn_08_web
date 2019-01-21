@@ -1,9 +1,9 @@
-package ru.titov.s04.dao;
+package ru.titov.s06.dao;
 
-import ru.titov.s04.dao.Dao;
-import ru.titov.s04.dao.domain.Account;
+import ru.titov.s06.dao.Dao;
+import ru.titov.s06.dao.domain.Account;
 
-import static  ru.titov.s04.dao.DaoFactory.getConnection;
+import static  ru.titov.s06.dao.DaoFactory.getConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

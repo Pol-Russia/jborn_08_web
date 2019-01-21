@@ -1,7 +1,7 @@
-package ru.titov.s04.service;
+package ru.titov.s06.service;
 
-import ru.titov.s04.dao.DaoFactory;
-import ru.titov.s04.service.converters.*;
+import ru.titov.s06.dao.DaoFactory;
+import ru.titov.s06.service.converters.*;
 
 public class ServiceFactory {
     private static UserConverter userConverter;

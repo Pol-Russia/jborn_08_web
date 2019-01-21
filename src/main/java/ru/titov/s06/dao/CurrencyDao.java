@@ -1,13 +1,13 @@
-package ru.titov.s04.dao;
+package ru.titov.s06.dao;
 
-import ru.titov.s04.dao.Dao;
-import ru.titov.s04.dao.domain.Currency;
+import ru.titov.s06.dao.Dao;
+import ru.titov.s06.dao.domain.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.titov.s04.dao.DaoFactory.getConnection;
+import static ru.titov.s06.dao.DaoFactory.getConnection;
 
 public class CurrencyDao implements Dao<Currency, Integer> {
 

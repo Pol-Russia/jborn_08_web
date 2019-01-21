@@ -1,9 +1,9 @@
-package ru.titov.s04.view.console;
+package ru.titov.s06.view.console;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import ru.titov.s04.service.PersonService;
-import ru.titov.s04.service.ServiceFactory;
-import ru.titov.s04.service.dto.UserDto;
+import ru.titov.s06.service.PersonService;
+import ru.titov.s06.service.ServiceFactory;
+import ru.titov.s06.service.dto.UserDto;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;

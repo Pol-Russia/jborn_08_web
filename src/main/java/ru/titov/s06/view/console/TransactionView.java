@@ -1,15 +1,15 @@
-package ru.titov.s04.view.console;
+package ru.titov.s06.view.console;
 
-import ru.titov.s04.dao.CategorieDao;
-import ru.titov.s04.dao.domain.Categorie;
-import ru.titov.s04.dao.domain.Transaction;
-import ru.titov.s04.service.CategorieService;
-import ru.titov.s04.service.ServiceFactory;
-import ru.titov.s04.service.TransactionService;
-import ru.titov.s04.service.converters.TransactionConverter;
-import ru.titov.s04.service.dto.AccountDto;
-import ru.titov.s04.service.dto.CategorieDto;
-import ru.titov.s04.service.dto.TransactionDto;
+import ru.titov.s06.dao.CategorieDao;
+import ru.titov.s06.dao.domain.Categorie;
+import ru.titov.s06.dao.domain.Transaction;
+import ru.titov.s06.service.CategorieService;
+import ru.titov.s06.service.ServiceFactory;
+import ru.titov.s06.service.TransactionService;
+import ru.titov.s06.service.converters.TransactionConverter;
+import ru.titov.s06.service.dto.AccountDto;
+import ru.titov.s06.service.dto.CategorieDto;
+import ru.titov.s06.service.dto.TransactionDto;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;

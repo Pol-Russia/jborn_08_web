@@ -1,7 +1,7 @@
-package ru.titov.s04.view.console;
+package ru.titov.s06.view.console;
 
-import ru.titov.s04.service.*;
-import ru.titov.s04.service.dto.*;
+import ru.titov.s06.service.*;
+import ru.titov.s06.service.dto.*;
 
 import java.util.List;
 import java.util.Scanner;

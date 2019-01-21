@@ -1,6 +1,6 @@
-package ru.titov.s04.dao;
+package ru.titov.s06.dao;
 
-import ru.titov.s04.dao.domain.Person;
+import ru.titov.s06.dao.domain.Person;
 
 import javax.sql.DataSource;
 import java.sql.*;

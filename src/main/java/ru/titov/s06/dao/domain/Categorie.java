@@ -1,4 +1,4 @@
-package ru.titov.s04.dao.domain;
+package ru.titov.s06.dao.domain;
 
 public class Categorie {
     private int id;

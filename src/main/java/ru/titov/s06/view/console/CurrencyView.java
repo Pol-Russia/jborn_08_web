@@ -1,10 +1,10 @@
-package ru.titov.s04.view.console;
+package ru.titov.s06.view.console;
 
-import ru.titov.s04.dao.domain.Currency;
-import ru.titov.s04.service.CurrencyService;
-import ru.titov.s04.service.ServiceFactory;
-import ru.titov.s04.service.converters.CurrencyConverter;
-import ru.titov.s04.service.dto.CurrencyDto;
+import ru.titov.s06.dao.domain.Currency;
+import ru.titov.s06.service.CurrencyService;
+import ru.titov.s06.service.ServiceFactory;
+import ru.titov.s06.service.converters.CurrencyConverter;
+import ru.titov.s06.service.dto.CurrencyDto;
 
 import java.util.List;
 import java.util.Scanner;

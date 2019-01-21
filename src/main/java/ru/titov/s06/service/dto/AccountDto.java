@@ -1,7 +1,7 @@
-package ru.titov.s04.service.dto;
+package ru.titov.s06.service.dto;
 
 
-import ru.titov.s04.service.CurrencyService;
+import ru.titov.s06.service.CurrencyService;
 
 import java.math.BigDecimal;
 

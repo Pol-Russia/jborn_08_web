@@ -1,4 +1,4 @@
-package ru.titov.s04.dao;
+package ru.titov.s06.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
 

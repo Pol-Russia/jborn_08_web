@@ -1,9 +1,9 @@
-package ru.titov.s04.service;
+package ru.titov.s06.service;
 
-import ru.titov.s04.dao.PersonDao;
-import ru.titov.s04.dao.domain.Person;
-import ru.titov.s04.service.converters.UserConverter;
-import ru.titov.s04.service.dto.UserDto;
+import ru.titov.s06.dao.PersonDao;
+import ru.titov.s06.dao.domain.Person;
+import ru.titov.s06.service.converters.UserConverter;
+import ru.titov.s06.service.dto.UserDto;
 
 public class SecurityService {
     private final PersonDao personDao;

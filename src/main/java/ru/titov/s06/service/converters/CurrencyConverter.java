@@ -1,7 +1,7 @@
-package ru.titov.s04.service.converters;
+package ru.titov.s06.service.converters;
 
-import ru.titov.s04.dao.domain.Currency;
-import ru.titov.s04.service.dto.CurrencyDto;
+import ru.titov.s06.dao.domain.Currency;
+import ru.titov.s06.service.dto.CurrencyDto;
 
 import java.util.ArrayList;
 import java.util.List;

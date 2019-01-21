@@ -1,4 +1,4 @@
-package ru.titov.s04.service;
+package ru.titov.s06.service;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

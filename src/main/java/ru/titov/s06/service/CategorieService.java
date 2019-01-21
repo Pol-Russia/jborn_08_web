@@ -1,9 +1,9 @@
-package ru.titov.s04.service;
+package ru.titov.s06.service;
 
-import ru.titov.s04.dao.CategorieDao;
-import ru.titov.s04.dao.domain.Categorie;
-import ru.titov.s04.service.converters.CategorieConverter;
-import ru.titov.s04.service.dto.CategorieDto;
+import ru.titov.s06.dao.CategorieDao;
+import ru.titov.s06.dao.domain.Categorie;
+import ru.titov.s06.service.converters.CategorieConverter;
+import ru.titov.s06.service.dto.CategorieDto;
 
 import java.util.List;
 
