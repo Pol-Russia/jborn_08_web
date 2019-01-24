@@ -16,13 +16,8 @@ public class AccountConverter {
             Account account = new Account();
             int id = accountDto.getId();
 
-            if (id == -11) {
-                account.setBalance(BigDecimal.valueOf(0));
-            }
-            else {
-                account.setBalance(accountDto.getBalance());
-            }
 
+            account.setBalance(accountDto.getBalance());
             account.setId(id);
             account.setNumberAccount(accountDto.getNumberAccount());
             account.setPersonID(accountDto.getPersonId());

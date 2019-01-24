@@ -169,7 +169,7 @@ public class PersonDao implements Dao<Person, Integer> {
     @Override
     public boolean delete(Integer id, Connection connection) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM person WHERE (person.id = ?)"))
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM person WHERE (person.id = ?)"))
              {
                  preparedStatement.setInt(1, id);
 

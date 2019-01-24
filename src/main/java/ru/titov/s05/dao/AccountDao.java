@@ -122,7 +122,7 @@ public class AccountDao implements Dao<Account, Integer> {
     @Override
     public boolean delete(Integer id, Connection connection) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM account WHERE (account.id = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE  FROM account WHERE (account.id = ?)")) {
 
 
             preparedStatement.setInt(1, id);

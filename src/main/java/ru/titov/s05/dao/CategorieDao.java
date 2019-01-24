@@ -125,7 +125,7 @@ public class CategorieDao implements Dao<Categorie, Integer> {
 
     @Override
     public boolean delete(Integer id, Connection connection) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM categorie WHERE (categorie.id = ?)" )) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM categorie WHERE (categorie.id = ?)" )) {
 
             preparedStatement.setInt(1, id);
 

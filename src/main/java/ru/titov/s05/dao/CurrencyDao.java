@@ -82,7 +82,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
 
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // кидать свое исключение и ловить в тестах
         }
 
     }
@@ -110,7 +110,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
 
     @Override
     public boolean delete(Integer id, Connection connection) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM currency WHERE (currency.id = ?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM currency WHERE (currency.id = ?)")) {
 
             preparedStatement.setInt(1, id);
 

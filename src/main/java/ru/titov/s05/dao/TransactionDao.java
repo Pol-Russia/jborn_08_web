@@ -119,7 +119,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     @Override
     public boolean delete(Integer id, Connection connection) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM  transaction WHERE (transaction.id = ?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM  transaction WHERE (transaction.id = ?)")) {
 
 
             preparedStatement.setInt(1, id);

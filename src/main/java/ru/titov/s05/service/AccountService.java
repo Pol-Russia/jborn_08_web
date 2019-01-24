@@ -37,6 +37,7 @@ public class AccountService {
          Account account = accountConverter.accountDtoToAccountConvert(accountDto);
 
          if (personDao.findById(account.getPersonID(), connection) != null) {
+
              int count = accountDao.countAccountPerson(account.getPersonID(), connection);
 
              if (count < DaoFactory.maxCountAccount && checkCurrencyId(accountDto, connection) && checkNumberAccount(accountDto, connection)) { // Не более 5 счетов в одни руки!
@@ -60,7 +61,7 @@ public class AccountService {
 
     private boolean checkNumberAccount(AccountDto accountDto, Connection connection) {
 
-        if (accountDao.findByNumberAccount(accountDto.getNumberAccount(), connection) != null) {
+        if (accountDao.findByNumberAccount(accountDto.getNumberAccount(), connection).size() != 0) {
 
             return false;
         }

@@ -1,4 +1,4 @@
-package ru.titov.s05.service.dto;
+package ru.titov.s05.service.exception;
 
 public class MaxCountAccountException extends Exception{
     private int number;
