@@ -1,5 +1,6 @@
 package ru.titov.s05.service;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,19 +12,16 @@ import ru.titov.s05.dao.PersonDao;
 import ru.titov.s05.dao.domain.Account;
 import ru.titov.s05.dao.domain.Currency;
 import ru.titov.s05.dao.domain.Person;
-import ru.titov.s05.dao.domain.Transaction;
 import ru.titov.s05.service.converters.AccountConverter;
 import ru.titov.s05.service.dto.AccountDto;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
+
 
 public class AccountDaoIntTest {
 
@@ -31,10 +29,9 @@ public class AccountDaoIntTest {
     AccountService subj;
     Person person = null;
     Currency currency = null;
-    @Mock AccountDao accountDaoMock;
 
-
-    public AccountDaoIntTest() throws SQLException {
+    @Before
+    public void setUp() throws SQLException {
         System.setProperty("jdbcUrl", "jdbc:h2:mem:testDatabase");//H2 DB работает только в памяти!
         System.setProperty("jdbcUsername", "sa");
         System.setProperty("jdbcPassword", "");
@@ -46,7 +43,6 @@ public class AccountDaoIntTest {
         Connection connection = DaoFactory.getConnection();
 
         person = DaoFactory.getPersonDao().insert(person, connection);
-
 
 
         currency = new Currency();
@@ -68,7 +64,6 @@ public class AccountDaoIntTest {
     }
 
 
-
     @Test
     public void AccountInsert_ok() throws SQLException {
 
@@ -88,9 +83,8 @@ public class AccountDaoIntTest {
         account = subj.createNewAccount(account, connection);
 
 
-
         assertNotNull(account);
-        assertEquals(1, account.getId()); // Проверил генерацию ключа по умолчанию -11
+        assertNotEquals(-11, account.getId()); // Проверил генерацию ключа по умолчанию -11
         connection.close();
     }
 
@@ -99,8 +93,6 @@ public class AccountDaoIntTest {
 
         Connection connection = DaoFactory.getConnection();
         AccountDto account = new AccountDto();
-
-
 
 
         account.setPersonId(10000); //Нет реального человека - нет счёта!
@@ -112,8 +104,7 @@ public class AccountDaoIntTest {
         assertEquals(-11, account.getId());
 
 
-
-            account = subj.createNewAccount(account, connection);
+        account = subj.createNewAccount(account, connection);
 
 
         assertNull(account);
@@ -135,7 +126,7 @@ public class AccountDaoIntTest {
         assertEquals(-11, account.getId());
 
 
-            account = subj.createNewAccount(account, connection);
+        account = subj.createNewAccount(account, connection);
 
 
         assertNull(account);
@@ -311,5 +302,37 @@ public class AccountDaoIntTest {
         connection.close();
     }
 
+    @After
+    public void setDown() throws SQLException {
+        //Код в нем будет "TRUNCATE TABLE USER
+        Connection connection = DaoFactory.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM account;")) {
+
+            preparedStatement.executeUpdate();
+
+
+        } catch (SQLException exept) {
+            throw new RuntimeException(exept);
+        }
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM person;")) {
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException exept) {
+            throw new RuntimeException(exept);
+        }
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM currency;")) {
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException exept) {
+            throw new RuntimeException(exept);
+        }
+
+        connection.close();
+
+    }
 
 }
