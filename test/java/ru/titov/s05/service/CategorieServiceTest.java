@@ -39,6 +39,7 @@ public class CategorieServiceTest {
 
         Categorie categorie = new Categorie();
         CategorieDto categorieDto = new CategorieDto();
+        categorieDto.setDescription("dddddd");
 
         when(categorieConverter.categorieDtoToCategorieConvert(categorieDto)).thenReturn(categorie);
         when(categorieDao.findByDescription(categorie, connectionMock)).thenReturn(null);
@@ -54,7 +55,10 @@ public class CategorieServiceTest {
         Categorie categorie = new Categorie();
 
         CategorieDto categorieDto = new CategorieDto();
+        categorieDto.setDescription("ddddddddddddd");
+        categorieDto.setId(10);
         categorie.setId(10);
+
 
         when(categorieConverter.categorieDtoToCategorieConvert(categorieDto)).thenReturn(categorie);
         when(categorieConverter.categorieToCategorieDtoConvert(categorie)).thenReturn(categorieDto);
@@ -87,6 +91,7 @@ public class CategorieServiceTest {
     public void checkDescription_ok() {
         Categorie categorie = new Categorie();
         CategorieDto categorieDto = new CategorieDto();
+        categorieDto.setDescription("bla-bk");
 
         when(categorieConverter.categorieDtoToCategorieConvert(categorieDto)).thenReturn(categorie);
         when(categorieDao.findByDescription(categorie, connectionMock)).thenReturn(null);

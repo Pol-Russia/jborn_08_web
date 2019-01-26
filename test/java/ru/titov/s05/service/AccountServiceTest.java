@@ -45,23 +45,28 @@ public class AccountServiceTest {
         account.setPersonID(13);
 
         Person person = new Person();
+        person.setId(13);
+        List<Account> list = new ArrayList<>();
 
         AccountDto accountDto = new AccountDto();
+        accountDto.setPersonId(13);
+        accountDto.setId(3);
         accountDto.setCurrencyId(123);
         accountDto.setNumberAccount(9);
         Currency currency = new Currency();
 
 
         when(accountConverter.accountDtoToAccountConvert(accountDto)).thenReturn(account);
+        when(accountConverter.accountToAccountDtoConvert(account)).thenReturn(accountDto);
         when(personDao.findById(13, connectionMock)).thenReturn(person);
-        when(accountDao.countAccountPerson(3, connectionMock)).thenReturn(0);
+        when(accountDao.findByNumberAccount(9, connectionMock)).thenReturn(list);
+        when(accountDao.countAccountPerson(13, connectionMock)).thenReturn(0);
         when(accountService.checkCurrencyId(accountDto, connectionMock)).thenReturn(true);
+        when(accountService.checkNumberAccount(accountDto, connectionMock)).thenReturn(true);
         when(currencyDao.findById(123, connectionMock)).thenReturn(currency);
-        when(accountDao.findByNumberAccount(9, connectionMock)).thenReturn(null);
 
 
         when(accountDao.insert(account, connectionMock)).thenReturn(account);
-        when(accountConverter.accountToAccountDtoConvert(account)).thenReturn(accountDto);
 
 
         AccountDto accountDtoFromService = subj.createNewAccount(accountDto, connectionMock);

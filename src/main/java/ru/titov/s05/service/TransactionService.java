@@ -290,6 +290,11 @@ public class TransactionService {
         return  transactionConverter.listTransactionToListTransactionDtoConvert(transactionDao.findByAccountId(accountDto.getId(), connection));
     }
 
+    public List<TransactionDto> getAllTransaction(AccountDto accountDto, Connection connection) {
+
+        return  transactionConverter.listTransactionToListTransactionDtoConvert(transactionDao.findAll());
+    }
+
     private String now() {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
         return dateFormat.format(new java.util.Date());

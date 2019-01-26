@@ -41,7 +41,7 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     }
 
     @Override
-    public List<Currency> findByAll() {
+    public List<Currency> findAll() {
         List<Currency> list = new ArrayList<>();
 
         try (Connection connection = getConnection();

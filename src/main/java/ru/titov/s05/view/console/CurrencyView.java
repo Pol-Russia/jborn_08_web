@@ -1,10 +1,8 @@
 package ru.titov.s05.view.console;
 
 import ru.titov.s05.dao.DaoFactory;
-import ru.titov.s05.dao.domain.Currency;
 import ru.titov.s05.service.CurrencyService;
 import ru.titov.s05.service.ServiceFactory;
-import ru.titov.s05.service.converters.CurrencyConverter;
 import ru.titov.s05.service.dto.CurrencyDto;
 
 import java.sql.SQLException;
@@ -75,7 +73,7 @@ public class CurrencyView {
 
     public List<CurrencyDto> findAllCurrencyDto() {
 
-        List<CurrencyDto> list = currencyService.downloadListCurrency();
+        List<CurrencyDto> list = currencyService.getAllCurrency();
 
         if (list != null && list.size() > 0 ) {
             return list;

@@ -1,10 +1,8 @@
 package ru.titov.s05.integrationTest;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import ru.titov.s05.dao.AccountDao;
 import ru.titov.s05.dao.CurrencyDao;
 import ru.titov.s05.dao.DaoFactory;
@@ -184,7 +182,7 @@ public class AccountDaoIntTest {
 
 
     @Test
-    public void accountFindById_ok() throws SQLException {
+    public void accountFindId_ok() throws SQLException {
 
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
@@ -249,7 +247,7 @@ public class AccountDaoIntTest {
 
         account = subj.createNewAccount(account, connection);
 
-        List<Account> list = accountDao.findByAll();
+        List<Account> list = accountDao.findAll();
         Account account1 = list.get(0);
 
 

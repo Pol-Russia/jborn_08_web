@@ -1,7 +1,6 @@
 package ru.titov.s05.integrationTest;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.titov.s05.dao.CurrencyDao;
@@ -9,7 +8,6 @@ import ru.titov.s05.dao.DaoFactory;
 import ru.titov.s05.dao.domain.Currency;
 import ru.titov.s05.service.CurrencyService;
 import ru.titov.s05.service.converters.CurrencyConverter;
-import ru.titov.s05.service.dto.CategorieDto;
 import ru.titov.s05.service.dto.CurrencyDto;
 
 import java.sql.Connection;
@@ -249,7 +247,7 @@ public class CurrencyDaointegrationTest {
 
 
     @Test
-    public void currencyFindByAll_ok() throws SQLException {
+    public void currencyFindAll_ok() throws SQLException {
 
         CurrencyDto currencyDto = new CurrencyDto();
         Connection connection = DaoFactory.getConnection();
@@ -262,10 +260,10 @@ public class CurrencyDaointegrationTest {
 
 
         subj.createNewCurrency(currencyDto, connection);
-        currencyDto.setNameCurrency("F");
+        currencyDto.setNameCurrency("Frr");
         subj.createNewCurrency(currencyDto, connection);
 
-        List<Currency>  list = currencyDao.findByAll();
+        List<Currency>  list = currencyDao.findAll();
 
         assertNotNull(list);
         assertEquals(2, list.size());

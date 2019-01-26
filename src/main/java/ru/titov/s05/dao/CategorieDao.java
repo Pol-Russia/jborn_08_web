@@ -52,7 +52,7 @@ public class CategorieDao implements Dao<Categorie, Integer> {
     }
 
     @Override
-    public List<Categorie> findByAll() {
+    public List<Categorie> findAll() {
         List<Categorie> list = new ArrayList<>();
 
         try (Connection connection = getConnection();

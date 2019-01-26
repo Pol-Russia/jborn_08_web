@@ -54,7 +54,7 @@ public class PersonDao implements Dao<Person, Integer> {
     }
 
     @Override
-    public List<Person> findByAll() {
+    public List<Person> findAll() {
         List<Person> list = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();

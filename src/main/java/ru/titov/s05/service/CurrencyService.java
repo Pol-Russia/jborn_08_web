@@ -1,7 +1,6 @@
 package ru.titov.s05.service;
 
 import ru.titov.s05.dao.CurrencyDao;
-import ru.titov.s05.dao.domain.Categorie;
 import ru.titov.s05.dao.domain.Currency;
 import ru.titov.s05.service.converters.CurrencyConverter;
 import ru.titov.s05.service.dto.CurrencyDto;
@@ -37,9 +36,9 @@ public class CurrencyService {
         return null;
     }
 
-    public List<CurrencyDto> downloadListCurrency() {
+    public List<CurrencyDto> getAllCurrency() {
 
-        return currencyConverter.listCurrencyToListCurrencyDtoConvert(currencyDao.findByAll());
+        return currencyConverter.listCurrencyToListCurrencyDtoConvert(currencyDao.findAll());
     }
 
     public boolean checkNameOfCurrency(CurrencyDto currencyDto, Connection connection) {
@@ -52,7 +51,6 @@ public class CurrencyService {
 
         return false;
     }
-
 
     public CurrencyDto updateCurrency(CurrencyDto currencyDto, Connection connection) {
 

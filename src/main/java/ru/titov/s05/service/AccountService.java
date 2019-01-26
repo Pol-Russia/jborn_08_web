@@ -5,14 +5,11 @@ import ru.titov.s05.dao.CurrencyDao;
 import ru.titov.s05.dao.DaoFactory;
 import ru.titov.s05.dao.PersonDao;
 import ru.titov.s05.dao.domain.Account;
-import ru.titov.s05.dao.domain.Person;
 import ru.titov.s05.service.converters.AccountConverter;
 import ru.titov.s05.service.dto.AccountDto;
 import ru.titov.s05.service.dto.UserDto;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
@@ -49,9 +46,9 @@ public class AccountService {
         return null;
     }
 
-    public List<AccountDto> downloadListAccount() {
+    public List<AccountDto> getAllAccount() {
 
-        return accountConverter.listAccountToListAccountDtoConvert(accountDao.findByAll());
+        return accountConverter.listAccountToListAccountDtoConvert(accountDao.findAll());
     }
 
     public List<AccountDto> findByPesonId(UserDto personDto, Connection connection) {
@@ -59,7 +56,7 @@ public class AccountService {
         return accountConverter.listAccountToListAccountDtoConvert(accountDao.findByPersonId(personDto.getId(), connection));
     }
 
-    private boolean checkNumberAccount(AccountDto accountDto, Connection connection) {
+    public boolean checkNumberAccount(AccountDto accountDto, Connection connection) {
 
         if (accountDao.findByNumberAccount(accountDto.getNumberAccount(), connection).size() != 0) {
 

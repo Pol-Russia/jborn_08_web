@@ -51,9 +51,9 @@ public class CategorieService {
         return null;
     }
 
-    public List<CategorieDto> downloadListCategorie() {
+    public List<CategorieDto> getAllCategorie() {
 
-        return  categorieConverter.listCategorieToListCategorieDtoConvert(categorieDao.findByAll());
+        return  categorieConverter.listCategorieToListCategorieDtoConvert(categorieDao.findAll());
     }
 
     public boolean checkDescription(CategorieDto categorieDto, Connection connection) {

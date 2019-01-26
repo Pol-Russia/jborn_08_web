@@ -54,7 +54,7 @@ public class AccountDao implements Dao<Account, Integer> {
     }
 
     @Override
-    public List<Account> findByAll() {
+    public List<Account> findAll() {
         List<Account> list = new ArrayList<>();
 
         try (Connection connection = getConnection();
@@ -137,7 +137,6 @@ public class AccountDao implements Dao<Account, Integer> {
 
         return false;
     }
-
 
     public List<Account> findByNumberAccount(Integer numberAccount, Connection connection) {
         Account account = new Account();

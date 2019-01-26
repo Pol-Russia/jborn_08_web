@@ -54,7 +54,7 @@ public class TransactionDao implements Dao<Transaction, Integer> {
     }
 
     @Override
-    public List<Transaction> findByAll() {
+    public List<Transaction> findAll() {
         List<Transaction> list = new ArrayList<>();
 
         try (Connection connection = getConnection();

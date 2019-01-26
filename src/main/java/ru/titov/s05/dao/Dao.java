@@ -6,7 +6,7 @@ public interface Dao<Domain, Id> {
 
     Domain findById(Id id, Connection connection);
 
-    List<Domain> findByAll();
+    List<Domain> findAll();
 
     Domain insert(Domain domain, Connection connection);
 

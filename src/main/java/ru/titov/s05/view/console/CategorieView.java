@@ -1,9 +1,7 @@
 package ru.titov.s05.view.console;
 
-import ru.titov.s05.dao.Dao;
 import ru.titov.s05.dao.DaoFactory;
 import ru.titov.s05.service.CategorieService;
-import ru.titov.s05.service.SecurityService;
 import ru.titov.s05.service.ServiceFactory;
 import ru.titov.s05.service.dto.CategorieDto;
 
@@ -65,7 +63,7 @@ public class CategorieView {
 
     public List<CategorieDto> findAllCategorieDto() {
 
-        List<CategorieDto> list = categorieService.downloadListCategorie();
+        List<CategorieDto> list = categorieService.getAllCategorie();
 
         if (list != null && list.size() >0 ) {
             return list;

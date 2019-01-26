@@ -1,7 +1,6 @@
 package ru.titov.s05.integrationTest;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.titov.s05.dao.CategorieDao;
@@ -248,7 +247,7 @@ public class CategorieDaointegrationTest {
 
 
     @Test
-    public void categorieFindByAll_ok() throws SQLException {
+    public void categorieFindAll_ok() throws SQLException {
 
         CategorieDto categorieDto = new CategorieDto();
         Connection connection = DaoFactory.getConnection();
@@ -264,7 +263,7 @@ public class CategorieDaointegrationTest {
         categorieDto.setDescription("FRT");
         subj.createNewCategorie(categorieDto, connection);
 
-        List<Categorie> list = categorieDao.findByAll();
+        List<Categorie> list = categorieDao.findAll();
 
         assertNotNull(list);
         assertEquals(2, list.size());

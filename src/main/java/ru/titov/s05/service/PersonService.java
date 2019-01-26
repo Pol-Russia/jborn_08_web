@@ -1,6 +1,5 @@
 package ru.titov.s05.service;
 
-import ru.titov.s05.dao.DaoFactory;
 import ru.titov.s05.dao.PersonDao;
 import ru.titov.s05.dao.domain.Person;
 import ru.titov.s05.service.converters.UserConverter;
@@ -23,9 +22,9 @@ public class PersonService {
         securityService = ServiceFactory.getSecurityService();
     }
 
-    private List<UserDto> downloadListUserDto() {
+    private List<UserDto> getAllUserDto() {
 
-        List<Person> person = personDao.findByAll();
+        List<Person> person = personDao.findAll();
         List<UserDto> listPersonDto = new ArrayList<>();
 
         for (Person p : person) {
