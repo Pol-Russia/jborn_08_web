@@ -107,20 +107,21 @@ public class CategorieDao implements Dao<Categorie, Integer> {
     public Categorie update(Categorie categorie, Connection connection) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE categorie SET " +
-                     "description = ? " +
+                     "description = ?" +
                      "WHERE categorie.id = ?");)
         {
             preparedStatement.setInt(2, categorie.getId());
             preparedStatement.setString(1, categorie.getDescription());
 
-            preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() > 0) {
 
                 return categorie;
-
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override

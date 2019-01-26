@@ -21,7 +21,7 @@ public class CurrencyService {
 
     public CurrencyDto createNewCurrency(CurrencyDto currencyDto, Connection connection) {
 
-        if (currencyDto != null && ! currencyDto.getNameCurrency().isEmpty() && (checkNameOfCurrency(currencyDto, connection))) {//Если валюта
+        if ( currencyDto != null && (! currencyDto.getNameCurrency().isEmpty()) && (checkNameOfCurrency(currencyDto, connection))) {//Если валюта
             //уже существует она не будет создана повторно
 
             Currency currency = currencyConverter.currencyDtoToCurrencyConvert(currencyDto);
@@ -43,7 +43,6 @@ public class CurrencyService {
     }
 
     public boolean checkNameOfCurrency(CurrencyDto currencyDto, Connection connection) {
-
         Currency currency = currencyConverter.currencyDtoToCurrencyConvert(currencyDto);
         currency = currencyDao.findByNameCurrency(currency, connection);
 
@@ -57,8 +56,8 @@ public class CurrencyService {
 
     public CurrencyDto updateCurrency(CurrencyDto currencyDto, Connection connection) {
 
-        Currency updateCurrency;
-        updateCurrency = currencyDao.findById(currencyDto.getId(), connection);
+
+        Currency updateCurrency = currencyDao.findById(currencyDto.getId(), connection);
 
             if (updateCurrency != null &&  (checkNameOfCurrency(currencyDto, connection))) {
 

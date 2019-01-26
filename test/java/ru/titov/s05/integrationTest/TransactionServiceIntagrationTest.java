@@ -1,4 +1,4 @@
-package ru.titov.s05.service;
+package ru.titov.s05.integrationTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import ru.titov.s05.dao.*;
 import ru.titov.s05.dao.domain.*;
+import ru.titov.s05.service.ServiceFactory;
+import ru.titov.s05.service.TransactionService;
 import ru.titov.s05.service.converters.TransactionConverter;
 
 import java.math.BigDecimal;

@@ -125,9 +125,8 @@ public class CurrencyDao implements Dao<Currency, Integer> {
     }
 
     public Currency findByNameCurrency(Currency currency, Connection connection) {
-
         try (PreparedStatement preparedStatement = connection.prepareStatement("Select * From currency " +
-                     "WHERE (UPPER(currency.name_of_currency) = UPPPER(?))")) {
+                     "WHERE (UPPER(currency.name_of_currency) = UPPER(?))")) {
 
             preparedStatement.setString(1, currency.getNameOfCurrency());
             ResultSet rs = preparedStatement.executeQuery();

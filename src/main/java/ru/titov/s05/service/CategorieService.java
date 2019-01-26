@@ -35,12 +35,13 @@ public class CategorieService {
 
     public CategorieDto updateCategorie(CategorieDto categorieDto, Connection connection) {
 
-        Categorie categorie = categorieConverter.categorieDtoToCategorieConvert(categorieDto);
+        Categorie categorie;
 
-        categorie = categorieDao.findById(categorie.getId(), connection);
+        categorie = categorieDao.findById(categorieDto.getId(), connection);
 
         if (categorie != null && checkDescription(categorieDto, connection)) {
 
+                categorie = categorieConverter.categorieDtoToCategorieConvert(categorieDto);
                 categorie = categorieDao.update(categorie, connection);
 
                 return categorieConverter.categorieToCategorieDtoConvert(categorie);
@@ -57,14 +58,20 @@ public class CategorieService {
 
     public boolean checkDescription(CategorieDto categorieDto, Connection connection) {
 
-        Categorie categorie = categorieConverter.categorieDtoToCategorieConvert(categorieDto);
-        categorie = categorieDao.findByDescription(categorie, connection);
+        if (categorieDto != null && categorieDto.getDescription().length() >= 2 ) {
 
-        if (categorie != null) {
-            return false;
+            Categorie categorie = categorieConverter.categorieDtoToCategorieConvert(categorieDto);
+            categorie = categorieDao.findByDescription(categorie, connection);
+
+            if (categorie != null) {
+
+                return false;
+            }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public boolean deleteCategorie(CategorieDto categorieDto, Connection connection) {

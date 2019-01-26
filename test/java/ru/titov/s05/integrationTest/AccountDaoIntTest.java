@@ -1,4 +1,4 @@
-package ru.titov.s05.service;
+package ru.titov.s05.integrationTest;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -12,6 +12,8 @@ import ru.titov.s05.dao.PersonDao;
 import ru.titov.s05.dao.domain.Account;
 import ru.titov.s05.dao.domain.Currency;
 import ru.titov.s05.dao.domain.Person;
+import ru.titov.s05.service.AccountService;
+import ru.titov.s05.service.ServiceFactory;
 import ru.titov.s05.service.converters.AccountConverter;
 import ru.titov.s05.service.dto.AccountDto;
 
@@ -65,7 +67,7 @@ public class AccountDaoIntTest {
 
 
     @Test
-    public void AccountInsert_ok() throws SQLException {
+    public void accountInsert_ok() throws SQLException {
 
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
@@ -89,7 +91,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountInsert_personIdWrong() throws SQLException {
+    public void accountInsert_personIdWrong() throws SQLException {
 
         Connection connection = DaoFactory.getConnection();
         AccountDto account = new AccountDto();
@@ -112,7 +114,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountInsert_CurrencyIdWrong() throws SQLException {
+    public void accountInsert_CurrencyIdWrong() throws SQLException {
 
         Connection connection = DaoFactory.getConnection();
         AccountDto account = new AccountDto();
@@ -134,7 +136,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountUpdate_ok() throws SQLException {
+    public void accountUpdate_ok() throws SQLException {
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
 
@@ -156,7 +158,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountUpdate_idWrong() throws SQLException {
+    public void accountUpdate_idWrong() throws SQLException {
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
 
@@ -182,7 +184,7 @@ public class AccountDaoIntTest {
 
 
     @Test
-    public void AccountFindById_ok() throws SQLException {
+    public void accountFindById_ok() throws SQLException {
 
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
@@ -210,7 +212,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountFindById_idWrong() throws SQLException {
+    public void accountFindById_idWrong() throws SQLException {
 
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
@@ -234,7 +236,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountFindAll_ok() throws SQLException {
+    public void accountFindAll_ok() throws SQLException {
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
 
@@ -261,7 +263,7 @@ public class AccountDaoIntTest {
 
 
     @Test
-    public void AccountDelete_ok() throws SQLException {
+    public void accountDelete_ok() throws SQLException {
 
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
@@ -281,7 +283,7 @@ public class AccountDaoIntTest {
     }
 
     @Test
-    public void AccountDelete_idWrong() throws SQLException {
+    public void accountDelete_idWrong() throws SQLException {
 
         AccountDto account = new AccountDto();
         Connection connection = DaoFactory.getConnection();
